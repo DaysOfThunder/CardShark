@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.mouthofrandom.cardshark.graphics.utility.GamePlay;
+import com.mouthofrandom.cardshark.graphics.utility.CanvasView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,6 +17,12 @@ public class MainActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_main);
+        /*
         setContentView(new GamePlay(this));
+       */
+
+        CanvasView customCanvas = (CanvasView) findViewById(R.id.mapcanvas);
     }
 }

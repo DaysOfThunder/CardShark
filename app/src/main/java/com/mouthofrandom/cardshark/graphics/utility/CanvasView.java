@@ -5,14 +5,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
-import android.graphics.Matrix;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.mouthofrandom.cardshark.R;
-
-import java.util.ArrayList;
 
 public class CanvasView extends View implements View.OnTouchListener {
     Context context;

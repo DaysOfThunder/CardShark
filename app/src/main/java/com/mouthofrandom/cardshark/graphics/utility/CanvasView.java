@@ -11,6 +11,8 @@ import android.view.View;
 
 import com.mouthofrandom.cardshark.R;
 
+import static com.mouthofrandom.cardshark.graphics.utility.Sprite.Direction.RIGHT;
+
 public class CanvasView extends View implements View.OnTouchListener {
     Context context;
 
@@ -32,7 +34,7 @@ public class CanvasView extends View implements View.OnTouchListener {
 
     int walkFrames = 32;
     int walkCount = 0;
-    Walk walking = null;
+    Sprite.Direction walking = null;
     int walkTime = 300;
 
     long startTime;
@@ -41,11 +43,14 @@ public class CanvasView extends View implements View.OnTouchListener {
 
     private Bitmap nBitmap = Bitmap.createScaledBitmap(mBitmap, mBitmap.getWidth() * scaleFac, mBitmap.getHeight() * scaleFac, false);
 
-    private Bitmap oBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.trainer);
+    private Sprite trainer;
 
     public CanvasView(Context c, AttributeSet attrs)
     {
         super(c, attrs);
+
+        trainer = new Sprite(getResources());
+
         context = c;
 
         this.setOnTouchListener(this);
@@ -62,7 +67,14 @@ public class CanvasView extends View implements View.OnTouchListener {
 
         canvas.drawBitmap(nBitmap, x, y, null);
 
-        canvas.drawBitmap(oBitmap, dim * 2, dim * 3, null);
+        try
+        {
+            trainer.draw(canvas);
+        }
+        catch (Drawable.DrawableNotInitializedException e)
+        {
+            e.printStackTrace();
+        }
 
         /*
         ArrayList<Bitmap> tileset = new ArrayList<Bitmap>();
@@ -80,6 +92,7 @@ public class CanvasView extends View implements View.OnTouchListener {
         }
         else
         {
+            trainer.stop();
             walking = null;
             walkCount = 0;
         }
@@ -109,12 +122,14 @@ public class CanvasView extends View implements View.OnTouchListener {
                 {
                     if (x2 > x1)
                     {
-                        walking = Walk.RIGHT;
+                        walking = Sprite.Direction.RIGHT;
+                        trainer.turn(walking);
                         animateWalk();
                     }
                     else
                     {
-                        walking = Walk.LEFT;
+                        walking = Sprite.Direction.LEFT;
+                        trainer.turn(walking);
                         animateWalk();
                     }
                 }
@@ -122,12 +137,13 @@ public class CanvasView extends View implements View.OnTouchListener {
                 {
                     if(y2 > y1)
                     {
-                        walking = Walk.UP;
+                        walking = Sprite.Direction.BACK;
+                        trainer.turn(walking);
                         animateWalk();
                     }
                     else
                     {
-                        walking = Walk.DOWN;
+                        walking = Sprite.Direction.FRONT;
                         animateWalk();
                     }
                 }
@@ -140,11 +156,6 @@ public class CanvasView extends View implements View.OnTouchListener {
 
     }
 
-    private enum Walk
-    {
-        LEFT, RIGHT, UP, DOWN
-    }
-
     private void animateWalk()
     {
         switch(walking)
@@ -155,15 +166,17 @@ public class CanvasView extends View implements View.OnTouchListener {
             case LEFT:
                 x -= dim/walkFrames; // move 100 pixels to the left
                 break;
-            case UP:
+            case BACK:
                 y += dim/walkFrames; // move 100 pixels to the up
                 break;
-            case DOWN:
+            case FRONT:
                 y -= dim/walkFrames; // move 100 pixels to the down
                 break;
         }
 
         walkCount++;
+
+        trainer.walk();
 
         this.postInvalidateDelayed(walkTime/walkFrames);
     }

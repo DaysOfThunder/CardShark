@@ -1,9 +1,10 @@
 package com.mouthofrandom.cardshark.graphics.utility;
 
-import android.content.res.Resources;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 
 import com.mouthofrandom.cardshark.R;
 
@@ -16,6 +17,9 @@ import java.util.Map;
 
 class Sprite implements Drawable
 {
+    public static int WALK_FRAMES = 32;
+    public static int WALK_TIME = 200;
+
     enum Direction
     {
         LEFT, RIGHT, BACK, FRONT
@@ -43,19 +47,82 @@ class Sprite implements Drawable
 
     private Bitmap bitmap = null;
 
-    Sprite(Resources res)
+    private int walkCount = 0;
+
+    Sprite(Context context)
     {
         bitmaps = new HashMap<>();
 
-        bitmaps.put(FRONT_STANDING, BitmapFactory.decodeResource(res, R.mipmap.trainer));
+        Matrix m = new Matrix();
+        Bitmap temp;
+
+        bitmaps.put(FRONT_STANDING, BitmapFactory.decodeResource(context.getResources(), R.mipmap.front_standing));
+        bitmaps.put(BACK_STANDING, BitmapFactory.decodeResource(context.getResources(), R.mipmap.back_standing));
+
+        temp = BitmapFactory.decodeResource(context.getResources(), R.mipmap.side_standing);
+
+        bitmaps.put(LEFT_STANDING, BitmapFactory.decodeResource(context.getResources(), R.mipmap.side_standing));
+
+        m.setScale(-1, 1);
+
+        bitmaps.put(RIGHT_STANDING, Bitmap.createBitmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), m, true));
+
+        m = new Matrix();
+
+        temp = BitmapFactory.decodeResource(context.getResources(), R.mipmap.front_walking);
+
+        bitmaps.put(FRONT_WALK_LEFT, temp);
+
+        m.setScale(-1, 1);
+
+        bitmaps.put(FRONT_WALK_RIGHT, Bitmap.createBitmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), m, true));
+
+        m = new Matrix();
+
+        temp = BitmapFactory.decodeResource(context.getResources(), R.mipmap.back_walking);
+
+        bitmaps.put(BACK_WALK_LEFT, temp);
+
+        m.setScale(-1, 1);
+
+        bitmaps.put(BACK_WALK_RIGHT, Bitmap.createBitmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), m, true));
+
+        m = new Matrix();
+
+        temp = BitmapFactory.decodeResource(context.getResources(), R.mipmap.side_walking);
+
+        bitmaps.put(LEFT_WALK_LEFT, temp);
 
         bitmap = bitmaps.get(FRONT_STANDING);
+
+        m.setScale(-1, 1);
+
+        bitmaps.put(RIGHT_WALK_RIGHT, Bitmap.createBitmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), m, true));
+
+        m = new Matrix();
+
+        temp = BitmapFactory.decodeResource(context.getResources(), R.mipmap.side_walking_2);
+
+        bitmaps.put(LEFT_WALK_RIGHT, temp);
+
+        bitmap = bitmaps.get(FRONT_STANDING);
+
+        m.setScale(-1, 1);
+
+        bitmaps.put(RIGHT_WALK_LEFT, Bitmap.createBitmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), m, true));
 
         wasInitialized = true;
     }
 
     public void walk()
     {
+        walkCount++;
+
+        if(walkCount != WALK_FRAMES/2 && walkCount != 1)
+        {
+            return;
+        }
+
         switch(current)
         {
             case LEFT:
@@ -110,6 +177,11 @@ class Sprite implements Drawable
 
                 break;
         }
+
+        if(walkCount == WALK_FRAMES)
+        {
+            stop();
+        }
     }
 
     public void stop()
@@ -129,6 +201,8 @@ class Sprite implements Drawable
                 bitmap = bitmaps.get(FRONT_STANDING);
                 break;
         }
+
+        walkCount = 0;
     }
 
     public void turn(Direction direction)
@@ -136,6 +210,11 @@ class Sprite implements Drawable
         current = direction;
 
         stop();
+    }
+
+    public int getWalkCount()
+    {
+        return walkCount;
     }
 
     @Override

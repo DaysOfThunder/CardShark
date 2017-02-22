@@ -11,8 +11,6 @@ import android.view.View;
 
 import com.mouthofrandom.cardshark.R;
 
-import static com.mouthofrandom.cardshark.graphics.utility.Sprite.Direction.RIGHT;
-
 public class CanvasView extends View implements View.OnTouchListener {
     Context context;
 
@@ -32,10 +30,7 @@ public class CanvasView extends View implements View.OnTouchListener {
 
     static final int MIN_DISTANCE = 150;
 
-    int walkFrames = 32;
-    int walkCount = 0;
     Sprite.Direction walking = null;
-    int walkTime = 300;
 
     long startTime;
 
@@ -49,7 +44,7 @@ public class CanvasView extends View implements View.OnTouchListener {
     {
         super(c, attrs);
 
-        trainer = new Sprite(getResources());
+        trainer = new Sprite(c);
 
         context = c;
 
@@ -67,15 +62,6 @@ public class CanvasView extends View implements View.OnTouchListener {
 
         canvas.drawBitmap(nBitmap, x, y, null);
 
-        try
-        {
-            trainer.draw(canvas);
-        }
-        catch (Drawable.DrawableNotInitializedException e)
-        {
-            e.printStackTrace();
-        }
-
         /*
         ArrayList<Bitmap> tileset = new ArrayList<Bitmap>();
 
@@ -86,15 +72,23 @@ public class CanvasView extends View implements View.OnTouchListener {
 
         */
 
-        if(null != walking && walkCount < walkFrames)
+        if(null != walking && trainer.getWalkCount() < Sprite.WALK_FRAMES)
         {
             animateWalk();
         }
         else
         {
-            trainer.stop();
             walking = null;
-            walkCount = 0;
+            trainer.stop();
+        }
+
+        try
+        {
+            trainer.draw(canvas);
+        }
+        catch (Drawable.DrawableNotInitializedException e)
+        {
+            e.printStackTrace();
         }
     }
 
@@ -144,6 +138,7 @@ public class CanvasView extends View implements View.OnTouchListener {
                     else
                     {
                         walking = Sprite.Direction.FRONT;
+                        trainer.turn(walking);
                         animateWalk();
                     }
                 }
@@ -161,23 +156,21 @@ public class CanvasView extends View implements View.OnTouchListener {
         switch(walking)
         {
             case RIGHT:
-                x += dim/walkFrames; // move 100 pixels to the right
+                x += dim/Sprite.WALK_FRAMES; // move 100 pixels to the right
                 break;
             case LEFT:
-                x -= dim/walkFrames; // move 100 pixels to the left
+                x -= dim/Sprite.WALK_FRAMES; // move 100 pixels to the left
                 break;
             case BACK:
-                y += dim/walkFrames; // move 100 pixels to the up
+                y += dim/Sprite.WALK_FRAMES; // move 100 pixels to the up
                 break;
             case FRONT:
-                y -= dim/walkFrames; // move 100 pixels to the down
+                y -= dim/Sprite.WALK_FRAMES; // move 100 pixels to the down
                 break;
         }
 
-        walkCount++;
-
         trainer.walk();
 
-        this.postInvalidateDelayed(walkTime/walkFrames);
+        this.postInvalidateDelayed(Sprite.WALK_TIME/Sprite.WALK_FRAMES);
     }
 }

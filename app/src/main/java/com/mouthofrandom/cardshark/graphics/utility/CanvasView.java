@@ -5,11 +5,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
+import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.mouthofrandom.cardshark.R;
+
+import java.io.IOException;
 
 public class CanvasView extends View implements View.OnTouchListener {
     Context context;
@@ -40,11 +43,22 @@ public class CanvasView extends View implements View.OnTouchListener {
 
     private Sprite trainer;
 
+    private TileMap map;
+
     public CanvasView(Context c, AttributeSet attrs)
     {
         super(c, attrs);
 
         trainer = new Sprite(c);
+
+        try
+        {
+            map = new TileMap(c, c.getAssets().open("assets/maps/outside.csv"));
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
 
         context = c;
 
@@ -60,6 +74,7 @@ public class CanvasView extends View implements View.OnTouchListener {
     {
         super.onDraw(canvas);
 
+        canvas.drawRGB(256, 256, 256);
         canvas.drawBitmap(nBitmap, x, y, null);
 
         /*

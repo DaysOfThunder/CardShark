@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.support.annotation.Dimension;
 
 import com.mouthofrandom.cardshark.R;
 
@@ -30,7 +32,9 @@ public class Tile implements Drawable
             isInitialized = true;
         }
 
-        bitmap = BitmapFactory.decodeStream(inputStream);
+        int tiles = context.getResources().getDimensionPixelSize(R.dimen.tiles);
+
+        bitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeStream(inputStream), 400, 400, false);
 
         this.isWalkable = isWalkable;
 
@@ -38,13 +42,13 @@ public class Tile implements Drawable
     }
 
     @Override
-    public void draw(Canvas canvas) throws DrawableNotInitializedException
+    public void draw(Canvas canvas, Matrix matrix) throws DrawableNotInitializedException
     {
         if(!isInitialized)
         {
             throw new DrawableNotInitializedException(this.getClass());
         }
 
-        canvas.drawBitmap(bitmap, 0, 0, null);
+        canvas.drawBitmap(bitmap, matrix, null);
     }
 }

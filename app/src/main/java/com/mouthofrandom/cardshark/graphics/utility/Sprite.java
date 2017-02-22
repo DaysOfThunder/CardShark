@@ -1,10 +1,12 @@
 package com.mouthofrandom.cardshark.graphics.utility;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.util.DisplayMetrics;
 
 import com.mouthofrandom.cardshark.R;
 
@@ -48,6 +50,9 @@ class Sprite implements Drawable
     private Bitmap bitmap = null;
 
     private int walkCount = 0;
+
+    private int x_draw;
+    private int y_draw;
 
     Sprite(Context context)
     {
@@ -110,6 +115,9 @@ class Sprite implements Drawable
         m.setScale(-1, 1);
 
         bitmaps.put(RIGHT_WALK_LEFT, Bitmap.createBitmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), m, true));
+
+        x_draw = (Resources.getSystem().getDisplayMetrics().widthPixels/2) - (bitmap.getWidth()/2);
+        y_draw = (Resources.getSystem().getDisplayMetrics().heightPixels/2) - (bitmap.getHeight()/2);
 
         wasInitialized = true;
     }
@@ -218,13 +226,13 @@ class Sprite implements Drawable
     }
 
     @Override
-    public void draw(Canvas canvas) throws DrawableNotInitializedException
+    public void draw(Canvas canvas, Matrix matrix) throws DrawableNotInitializedException
     {
         if(!wasInitialized)
         {
             throw new DrawableNotInitializedException(this.getClass());
         }
 
-        canvas.drawBitmap(bitmap, 576, 864, null);
+        canvas.drawBitmap(bitmap, x_draw, y_draw, null);
     }
 }

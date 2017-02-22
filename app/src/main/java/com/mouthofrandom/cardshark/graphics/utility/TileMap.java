@@ -2,8 +2,9 @@ package com.mouthofrandom.cardshark.graphics.utility;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.graphics.Canvas;
-import android.graphics.Point;
+import android.graphics.Matrix;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -12,6 +13,7 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,7 +31,11 @@ public class TileMap implements Drawable
     private int width;
     private int height;
 
-    private Point startingPosition;
+    private static final int SCREEN_WIDTH = Resources.getSystem().getDisplayMetrics().widthPixels;
+    private static final int SCREEN_HEIGHT = Resources.getSystem().getDisplayMetrics().heightPixels;
+
+    public int offset_x = 0;
+    public int offset_y = 0;
 
     public TileMap(Context context, InputStream inputStream)
     {
@@ -40,7 +46,9 @@ public class TileMap implements Drawable
 
         AssetManager assetManager = context.getAssets();
 
-        String prefix = "assets/tiles";
+        String prefix = "tiles";
+
+        tiles = new ArrayList<>();
 
         try
         {
@@ -54,20 +62,17 @@ public class TileMap implements Drawable
             e.printStackTrace();
         }
 
-        CSVParser mapParser = null;
-
         try
         {
-            mapParser = new CSVParser(new InputStreamReader(inputStream), CSVFormat.DEFAULT);
+            CSVParser mapParser = new CSVParser(new InputStreamReader(inputStream), CSVFormat.DEFAULT);
 
             List<CSVRecord> rows = mapParser.getRecords();
 
             width = Integer.parseInt(rows.get(0).get(0));
             height = Integer.parseInt(rows.get(0).get(1));
 
-            startingPosition = new Point(
-                    Integer.parseInt(rows.get(0).get(2)),
-                    Integer.parseInt(rows.get(0).get(3)));
+            offset_x = Integer.parseInt(rows.get(0).get(2)) * 400;
+            offset_y = Integer.parseInt(rows.get(0).get(3)) * 400;
 
             map = new int[width][height];
 
@@ -85,23 +90,25 @@ public class TileMap implements Drawable
         {
             e.printStackTrace();
         }
-
-        assetManager.close();
     }
 
     @Override
-    public void draw(Canvas canvas) throws DrawableNotInitializedException
+    public void draw(Canvas canvas, Matrix matrix) throws DrawableNotInitializedException
     {
         if(!isInitialized)
         {
             throw new DrawableNotInitializedException(this.getClass());
         }
 
+        Matrix _matrix = new Matrix();
+
         for(int i = 0; i < width; i++)
         {
             for(int j = 0; j < height; j++)
             {
-                tiles.get(map[i][j]).draw(canvas);
+                _matrix.setTranslate((400 * i) + offset_x, (400 * j) + offset_y);
+
+                tiles.get(map[i][j]).draw(canvas, _matrix);
             }
         }
     }

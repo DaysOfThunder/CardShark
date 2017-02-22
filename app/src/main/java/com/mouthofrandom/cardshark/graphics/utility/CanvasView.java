@@ -53,7 +53,7 @@ public class CanvasView extends View implements View.OnTouchListener {
 
         try
         {
-            map = new TileMap(c, c.getAssets().open("assets/maps/outside.csv"));
+            map = new TileMap(c, c.getAssets().open("maps/outside.csv"));
         }
         catch (IOException e)
         {
@@ -75,17 +75,6 @@ public class CanvasView extends View implements View.OnTouchListener {
         super.onDraw(canvas);
 
         canvas.drawRGB(256, 256, 256);
-        canvas.drawBitmap(nBitmap, x, y, null);
-
-        /*
-        ArrayList<Bitmap> tileset = new ArrayList<Bitmap>();
-
-
-        for (int row = 0; row < (mBitmap.getHeight() / tilesetDimension) ; row++){
-            for (int column = 0; column < (mBitmap.getWidth() / tilesetDimension); column++){
-                tileset.add(Bitmap.createBitmap(mBitmap, (column * tilesetDimension), (row * tilesetDimension), tilesetDimension, tilesetDimension));
-
-        */
 
         if(null != walking && trainer.getWalkCount() < Sprite.WALK_FRAMES)
         {
@@ -99,7 +88,8 @@ public class CanvasView extends View implements View.OnTouchListener {
 
         try
         {
-            trainer.draw(canvas);
+            map.draw(canvas, null);
+            trainer.draw(canvas, null);
         }
         catch (Drawable.DrawableNotInitializedException e)
         {
@@ -171,16 +161,16 @@ public class CanvasView extends View implements View.OnTouchListener {
         switch(walking)
         {
             case RIGHT:
-                x += dim/Sprite.WALK_FRAMES; // move 100 pixels to the right
+                map.offset_x += dim/Sprite.WALK_FRAMES; // move 100 pixels to the right
                 break;
             case LEFT:
-                x -= dim/Sprite.WALK_FRAMES; // move 100 pixels to the left
+                map.offset_x -= dim/Sprite.WALK_FRAMES; // move 100 pixels to the left
                 break;
             case BACK:
-                y += dim/Sprite.WALK_FRAMES; // move 100 pixels to the up
+                map.offset_y += dim/Sprite.WALK_FRAMES; // move 100 pixels to the up
                 break;
             case FRONT:
-                y -= dim/Sprite.WALK_FRAMES; // move 100 pixels to the down
+                map.offset_y -= dim/Sprite.WALK_FRAMES; // move 100 pixels to the down
                 break;
         }
 

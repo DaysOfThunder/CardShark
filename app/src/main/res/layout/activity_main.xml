@@ -33,6 +33,6 @@
         android:textAlignment="center"
         android:textColor="@android:color/background_light"
         android:textSize="36sp"
-        android:fontFamily="sans-serif" />
+        android:fontFamily="monospace" />
 
 </FrameLayout>

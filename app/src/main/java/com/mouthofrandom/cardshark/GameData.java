@@ -11,15 +11,25 @@ import java.io.InputStreamReader;
 
 /**
  * Created by tylerwoodfin on 2/23/17.
+ * Used to store and update the game's balance.
  */
 
 public interface GameData
 {
-    public double getBalance(Context c);
-    public void setBalance(Context c, double balance);
-    public void setIncrementBalance(Context c, double balance);
-    public void saveData(Context c, String filename, String contents);
-    public void toast(Context c, String message);
+    //Sets the overall balance
+    double getBalance(Context c);
+
+    //Sets the overall balance
+    void setBalance(Context c, double balance);
+
+    //Increments the balance (use negative numbers to decrement)
+    void setIncrementBalance(Context c, double balance);
+
+    //Used within getBalance and setBalance- you probably don't need to ever call this
+    void saveData(Context c, String filename, String contents);
+
+    //flashes a message on the Android device; use for testing or as a placeholder
+    void toast(Context c, String message);
 }
 
 class BasicGameData implements GameData

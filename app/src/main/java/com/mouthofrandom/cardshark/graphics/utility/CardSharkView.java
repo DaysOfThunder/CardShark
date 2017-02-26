@@ -1,35 +1,30 @@
-package com.mouthofrandom.cardshark;
+package com.mouthofrandom.cardshark.graphics.utility;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.SurfaceView;
 import android.view.SurfaceHolder;
-
-import com.mouthofrandom.cardshark.graphics.utility.Animatable;
-import com.mouthofrandom.cardshark.graphics.utility.Drawable;
-import com.mouthofrandom.cardshark.graphics.utility.Sprite;
+import android.view.SurfaceView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import static com.mouthofrandom.cardshark.graphics.utility.Sprite.*;
-
-
-public class CasinoView extends SurfaceView implements SurfaceHolder.Callback
+@SuppressLint("ViewConstructor")
+public class CardSharkView extends SurfaceView implements SurfaceHolder.Callback, Subject
 {
-    Animation animation;
+    CardSharkView.Animation animation;
+    List<Drawable> elements;
 
-    List<Animatable> animatables;
-
-    public CasinoView(Context context, AttributeSet attrs)
+    public CardSharkView(Context context, AttributeSet attrs, Drawable... drawables)
     {
         super(context, attrs);
 
-        animatables = new ArrayList<>();
+        elements = new ArrayList<>();
 
-        animatables.add(new Sprite(context));
+        Collections.addAll(elements, drawables);
 
         getHolder().addCallback(this);
 
@@ -42,22 +37,35 @@ public class CasinoView extends SurfaceView implements SurfaceHolder.Callback
         // When the screen rotates.
     }
 
-    @Override
-    public void onDraw(Canvas canvas)
+    public void doDraw(Canvas canvas)
     {
-        super.onDraw(canvas);
+        super.draw(canvas);
 
         try
         {
-            for(Animatable animatable : animatables)
+            for(Drawable drawable : elements)
             {
-                if(!animatable.isComplete())
+                if(drawable instanceof Animatable)
                 {
-                    animatable.next();
+                    Animatable animatable = (Animatable) drawable;
+
+                    if(animatable.isRunning())
+                    {
+                        if(animatable.isComplete())
+                        {
+                            animatable.finish();
+                        }
+                        else
+                        {
+                            animatable.next();
+                        }
+                    }
                 }
 
-                animatable.draw(canvas);
+                drawable.draw(canvas);
+
             }
+
         }
         catch (Drawable.DrawableNotInitializedException e)
         {
@@ -88,32 +96,26 @@ public class CasinoView extends SurfaceView implements SurfaceHolder.Callback
                 float deltaX = touch_x_end - touch_x_start;
                 float deltaY = touch_y_end - touch_y_start;
 
-                Sprite.SpriteAnimationArguments args = new Sprite.SpriteAnimationArguments();
-
                 if (Math.abs(deltaX) > MIN_DISTANCE)
                 {
                     if (touch_x_end > touch_x_start)
                     {
-                        args.direction = Direction.RIGHT;
-                        trainer.start(args);
+                        notify(TouchEvent.SWIPE_RIGHT);
                     }
                     else
                     {
-                        args.direction = Direction.LEFT;
-                        trainer.start(args);
+                        notify(TouchEvent.SWIPE_LEFT);
                     }
                 }
                 else if(Math.abs(deltaY) > MIN_DISTANCE)
                 {
                     if(touch_y_end > touch_y_start)
                     {
-                        args.direction = Direction.BACK;
-                        trainer.start(args);
+                        notify(TouchEvent.SWIPE_UP);
                     }
                     else
                     {
-                        args.direction = Direction.FRONT;
-                        trainer.start(args);
+                        notify(TouchEvent.SWIPE_DOWN);
                     }
                 }
                 break;
@@ -125,7 +127,7 @@ public class CasinoView extends SurfaceView implements SurfaceHolder.Callback
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder)
     {
-        animation = new Animation(getHolder(), this);
+        animation = new CardSharkView.Animation(getHolder(), this);
         animation.start();
     }
 
@@ -153,19 +155,31 @@ public class CasinoView extends SurfaceView implements SurfaceHolder.Callback
         }
     }
 
+    @Override
+    public void notify(TouchEvent touchEvent)
+    {
+        for(Drawable element : elements)
+        {
+            if(element instanceof Observer)
+            {
+                ((Observer) element).update(touchEvent);
+            }
+        }
+    }
+
     private class Animation extends Thread
     {
         private final SurfaceHolder surfaceHolder;
 
-        private final CasinoView casinoView;
+        private final CardSharkView cardSharkView;
 
         private boolean running = false;
 
-        Animation(SurfaceHolder surfaceHolder, CasinoView casinoView)
+        Animation(SurfaceHolder surfaceHolder, CardSharkView cardSharkView)
         {
             this.surfaceHolder = surfaceHolder;
 
-            this.casinoView = casinoView;
+            this.cardSharkView = cardSharkView;
         }
 
         @Override
@@ -212,11 +226,11 @@ public class CasinoView extends SurfaceView implements SurfaceHolder.Callback
 
                 try
                 {
-                    canvas = surfaceHolder.lockCanvas(null);
+                    canvas = surfaceHolder.lockCanvas();
 
                     synchronized (surfaceHolder)
                     {
-                        casinoView.onDraw(canvas);
+                        cardSharkView.doDraw(canvas);
                     }
                 }
                 finally

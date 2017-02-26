@@ -10,6 +10,8 @@ public interface Animatable extends Drawable
 
     void next();
 
+    boolean isRunning();
+
     boolean isComplete();
 
     void finish();

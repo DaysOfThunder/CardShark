@@ -1,7 +1,9 @@
-package com.mouthofrandom.cardshark;
+package com.mouthofrandom.cardshark.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.mouthofrandom.cardshark.R;
 
 public class RouletteBoardActivity extends AppCompatActivity {
 

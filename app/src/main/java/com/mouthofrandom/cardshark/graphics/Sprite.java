@@ -1,22 +1,29 @@
-package com.mouthofrandom.cardshark.graphics.utility;
+package com.mouthofrandom.cardshark.graphics;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.util.DisplayMetrics;
+import android.view.WindowManager;
 
 import com.mouthofrandom.cardshark.R;
+import com.mouthofrandom.cardshark.graphics.utility.Observer;
+import com.mouthofrandom.cardshark.graphics.utility.Subject;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Sprite implements Animatable
-{
-    public static int WALK_FRAMES = 32;
-    public static int WALK_TIME = 200;
+import static com.mouthofrandom.cardshark.graphics.Sprite.Direction.*;
 
-    public enum Direction
+public class Sprite implements Observer
+{
+    private static int WALK_FRAMES = 32;
+
+    private boolean isRunning = false;
+
+    enum Direction
     {
         LEFT, RIGHT, BACK, FRONT
     }
@@ -39,11 +46,14 @@ public class Sprite implements Animatable
             RIGHT_WALK_LEFT = "right_walk_left",
             RIGHT_WALK_RIGHT = "right_walk_right";
 
-    private Direction current = Direction.FRONT;
+    private Direction current = FRONT;
 
     private Bitmap bitmap = null;
 
     private int walkCount = 0;
+
+    private int draw_x;
+    private int draw_y;
 
     public Sprite(Context context)
     {
@@ -107,10 +117,36 @@ public class Sprite implements Animatable
 
         bitmaps.put(RIGHT_WALK_LEFT, Bitmap.createBitmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), m, true));
 
+        DisplayMetrics metrics = new DisplayMetrics();
+        ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(metrics);
+
+        draw_x = (metrics.widthPixels/2) - (bitmap.getWidth()/2);
+        draw_y = (metrics.heightPixels/2) - (bitmap.getHeight()/2);
+
         wasInitialized = true;
     }
 
-    public void walk()
+    @Override
+    public void draw(Canvas canvas) throws DrawableNotInitializedException
+    {
+        if(!wasInitialized)
+        {
+            throw new DrawableNotInitializedException(this.getClass());
+        }
+
+        canvas.drawBitmap(bitmap, draw_x, draw_y, null);
+    }
+
+    @Override
+    public void start(AnimationArguments animationArgs)
+    {
+        current = ((SpriteAnimationArguments)animationArgs).direction;
+
+        isRunning = true;
+    }
+
+    @Override
+    public void next()
     {
         walkCount++;
 
@@ -173,14 +209,22 @@ public class Sprite implements Animatable
 
                 break;
         }
-
-        if(walkCount == WALK_FRAMES)
-        {
-            stop();
-        }
     }
 
-    public void stop()
+    @Override
+    public boolean isRunning()
+    {
+        return isRunning;
+    }
+
+    @Override
+    public boolean isComplete()
+    {
+        return walkCount > WALK_FRAMES;
+    }
+
+    @Override
+    public void finish()
     {
         switch(current)
         {
@@ -199,57 +243,37 @@ public class Sprite implements Animatable
         }
 
         walkCount = 0;
-    }
 
-    public void turn(Direction direction)
-    {
-        current = direction;
-
-        stop();
-    }
-
-    public int getWalkCount()
-    {
-        return walkCount;
+        isRunning = false;
     }
 
     @Override
-    public void draw(Canvas canvas) throws DrawableNotInitializedException
+    public void update(Subject.TouchEvent touchEvent)
     {
-        if(!wasInitialized)
+        start(new SpriteAnimationArguments(touchEvent));
+    }
+
+    private static class SpriteAnimationArguments implements AnimationArguments
+    {
+        SpriteAnimationArguments(Subject.TouchEvent touchEvent)
         {
-            throw new DrawableNotInitializedException(this.getClass());
+            switch(touchEvent)
+            {
+                case SWIPE_UP:
+                    direction = BACK;
+                    break;
+                case SWIPE_DOWN:
+                    direction = FRONT;
+                    break;
+                case SWIPE_LEFT:
+                    direction = LEFT;
+                    break;
+                case SWIPE_RIGHT:
+                    direction = RIGHT;
+                    break;
+            }
         }
 
-        canvas.drawBitmap(bitmap, 300, 300, null);
-    }
-
-    @Override
-    public void start(AnimationArguments animationArgs)
-    {
-        turn(((SpriteAnimationArguments)animationArgs).direction);
-    }
-
-    @Override
-    public void next()
-    {
-        walk();
-    }
-
-    @Override
-    public boolean isComplete()
-    {
-        return walkCount < 32;
-    }
-
-    @Override
-    public void finish()
-    {
-        stop();
-    }
-
-    public static class SpriteAnimationArguments implements AnimationArguments
-    {
-        public Direction direction;
+        Direction direction;
     }
 }

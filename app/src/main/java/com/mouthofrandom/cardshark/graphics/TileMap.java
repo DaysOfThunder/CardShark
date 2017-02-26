@@ -1,10 +1,18 @@
-package com.mouthofrandom.cardshark.graphics.utility;
+package com.mouthofrandom.cardshark.graphics;
 
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+
+import com.mouthofrandom.cardshark.R;
+import com.mouthofrandom.cardshark.graphics.utility.Animatable;
+import com.mouthofrandom.cardshark.graphics.utility.Drawable;
+import com.mouthofrandom.cardshark.graphics.utility.Observer;
+import com.mouthofrandom.cardshark.graphics.utility.Subject;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -20,7 +28,7 @@ import java.util.List;
  * Created by coleman on 2/22/17.
  */
 
-public class TileMap implements Drawable
+public class TileMap implements Observer
 {
     private boolean isInitialized = false;
 
@@ -54,7 +62,7 @@ public class TileMap implements Drawable
         {
             for(String path : assetManager.list(prefix))
             {
-                tiles.add(new Tile(context, assetManager.open(prefix + "/" + path), path.contains("walk"), null));
+                //tiles.add(new Tile(context, assetManager.open(prefix + "/" + path), path.contains("walk"), null));
             }
         }
         catch (IOException e)
@@ -108,8 +116,54 @@ public class TileMap implements Drawable
             {
                 _matrix.setTranslate((400 * i) + offset_x, (400 * j) + offset_y);
 
-                tiles.get(map[i][j]).draw(canvas);
+                //tiles.get(map[i][j]).draw(canvas);
             }
+        }
+    }
+
+    @Override
+    public void update(Subject.TouchEvent touchEvent) {
+
+    }
+
+    @Override
+    public void start(AnimationArguments animationArgs) {
+
+    }
+
+    @Override
+    public void next() {
+
+    }
+
+    @Override
+    public boolean isRunning() {
+        return false;
+    }
+
+    @Override
+    public boolean isComplete() {
+        return false;
+    }
+
+    @Override
+    public void finish() {
+
+    }
+
+    private static class Tile
+    {
+        private Bitmap bitmap = null;
+
+        private boolean isWalkable = false;
+
+        public Tile(Context context, InputStream inputStream, boolean isWalkable)
+        {
+            int tiles = context.getResources().getDimensionPixelSize(R.dimen.tiles);
+
+            bitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeStream(inputStream), 400, 400, false);
+
+            this.isWalkable = isWalkable;
         }
     }
 }

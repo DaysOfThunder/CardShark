@@ -19,7 +19,7 @@
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="@android:color/background_dark"
         android:theme="?attr/actionBarTheme"
         android:minHeight="?attr/actionBarSize"
         android:id="@+id/toolbar" />
@@ -33,6 +33,6 @@
         android:textAlignment="center"
         android:textColor="@android:color/background_light"
         android:textSize="36sp"
-        android:fontFamily="sans-serif" />
+        android:fontFamily="monospace" />
 
 </FrameLayout>

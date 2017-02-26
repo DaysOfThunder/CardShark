@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.SurfaceHolder;
 import android.view.View;
 
 import com.mouthofrandom.cardshark.R;
@@ -88,8 +89,8 @@ public class CanvasView extends View implements View.OnTouchListener {
 
         try
         {
-            map.draw(canvas, null);
-            trainer.draw(canvas, null);
+            map.draw(canvas);
+            //trainer.draw(canvas, null);
         }
         catch (Drawable.DrawableNotInitializedException e)
         {

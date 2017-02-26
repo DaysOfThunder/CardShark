@@ -16,7 +16,7 @@ public interface Drawable
      * @throws DrawableNotInitializedException - if the object has not been properly initialized to
      * use the resources from that view.
      */
-    void draw(Canvas canvas, Matrix matrix) throws DrawableNotInitializedException;
+    void draw(Canvas canvas) throws DrawableNotInitializedException;
 
     class DrawableNotInitializedException extends Exception
     {

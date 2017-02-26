@@ -33,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        CanvasView customCanvas = (CanvasView) findViewById(R.id.mapcanvas);
+        CasinoView casinoView = (CasinoView) findViewById(R.id.mapcanvas);
+        //CanvasView customCanvas = (CanvasView) findViewById(R.id.mapcanvas);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);   //set fullscreen
 

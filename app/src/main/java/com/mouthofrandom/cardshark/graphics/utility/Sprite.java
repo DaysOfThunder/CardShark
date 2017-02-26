@@ -1,28 +1,22 @@
 package com.mouthofrandom.cardshark.graphics.utility;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.util.DisplayMetrics;
 
 import com.mouthofrandom.cardshark.R;
 
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by coleman on 2/21/17.
- */
-
-class Sprite implements Drawable
+public class Sprite implements Animatable
 {
     public static int WALK_FRAMES = 32;
     public static int WALK_TIME = 200;
 
-    enum Direction
+    public enum Direction
     {
         LEFT, RIGHT, BACK, FRONT
     }
@@ -51,10 +45,7 @@ class Sprite implements Drawable
 
     private int walkCount = 0;
 
-    private int x_draw;
-    private int y_draw;
-
-    Sprite(Context context)
+    public Sprite(Context context)
     {
         bitmaps = new HashMap<>();
 
@@ -115,9 +106,6 @@ class Sprite implements Drawable
         m.setScale(-1, 1);
 
         bitmaps.put(RIGHT_WALK_LEFT, Bitmap.createBitmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), m, true));
-
-        x_draw = (Resources.getSystem().getDisplayMetrics().widthPixels/2) - (bitmap.getWidth()/2);
-        y_draw = (Resources.getSystem().getDisplayMetrics().heightPixels/2) - (bitmap.getHeight()/2);
 
         wasInitialized = true;
     }
@@ -226,13 +214,42 @@ class Sprite implements Drawable
     }
 
     @Override
-    public void draw(Canvas canvas, Matrix matrix) throws DrawableNotInitializedException
+    public void draw(Canvas canvas) throws DrawableNotInitializedException
     {
         if(!wasInitialized)
         {
             throw new DrawableNotInitializedException(this.getClass());
         }
 
-        canvas.drawBitmap(bitmap, x_draw, y_draw, null);
+        canvas.drawBitmap(bitmap, 300, 300, null);
+    }
+
+    @Override
+    public void start(AnimationArguments animationArgs)
+    {
+        turn(((SpriteAnimationArguments)animationArgs).direction);
+    }
+
+    @Override
+    public void next()
+    {
+        walk();
+    }
+
+    @Override
+    public boolean isComplete()
+    {
+        return walkCount < 32;
+    }
+
+    @Override
+    public void finish()
+    {
+        stop();
+    }
+
+    public static class SpriteAnimationArguments implements AnimationArguments
+    {
+        public Direction direction;
     }
 }

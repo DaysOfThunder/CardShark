@@ -42,13 +42,13 @@ public class Tile implements Drawable
     }
 
     @Override
-    public void draw(Canvas canvas, Matrix matrix) throws DrawableNotInitializedException
+    public void draw(Canvas canvas) throws DrawableNotInitializedException
     {
         if(!isInitialized)
         {
             throw new DrawableNotInitializedException(this.getClass());
         }
 
-        canvas.drawBitmap(bitmap, matrix, null);
+        canvas.drawBitmap(bitmap, null, null);
     }
 }

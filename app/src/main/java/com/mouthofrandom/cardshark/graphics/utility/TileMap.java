@@ -93,7 +93,7 @@ public class TileMap implements Drawable
     }
 
     @Override
-    public void draw(Canvas canvas, Matrix matrix) throws DrawableNotInitializedException
+    public void draw(Canvas canvas) throws DrawableNotInitializedException
     {
         if(!isInitialized)
         {
@@ -108,7 +108,7 @@ public class TileMap implements Drawable
             {
                 _matrix.setTranslate((400 * i) + offset_x, (400 * j) + offset_y);
 
-                tiles.get(map[i][j]).draw(canvas, _matrix);
+                tiles.get(map[i][j]).draw(canvas);
             }
         }
     }

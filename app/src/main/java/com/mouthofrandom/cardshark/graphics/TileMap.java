@@ -6,11 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 
-import com.mouthofrandom.cardshark.R;
-import com.mouthofrandom.cardshark.graphics.utility.Animatable;
-import com.mouthofrandom.cardshark.graphics.utility.Drawable;
 import com.mouthofrandom.cardshark.graphics.utility.Observer;
 import com.mouthofrandom.cardshark.graphics.utility.Subject;
 
@@ -24,34 +20,32 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by coleman on 2/22/17.
- */
+import static com.mouthofrandom.cardshark.graphics.TileMap.Direction.*;
 
 public class TileMap implements Observer
 {
-    private boolean isInitialized = false;
+    private static final int DIMENSIONS = 416;
+    private static final int FRAMES = 32;
+    private static final int offset_x = (-DIMENSIONS/2) + (Resources.getSystem().getDisplayMetrics().widthPixels/2);
+    private static final int offset_y = (-DIMENSIONS/2) + (DIMENSIONS/3) + (Resources.getSystem().getDisplayMetrics().heightPixels/2);
 
     private List<Tile> tiles;
-
     private int[][] map;
 
     private int width;
     private int height;
+    private int position_x;
+    private int position_y;
 
-    private static final int SCREEN_WIDTH = Resources.getSystem().getDisplayMetrics().widthPixels;
-    private static final int SCREEN_HEIGHT = Resources.getSystem().getDisplayMetrics().heightPixels;
+    private int walk_offset_x = 0;
+    private int walk_offset_y = 0;
 
-    public int offset_x = 0;
-    public int offset_y = 0;
+    private Direction current;
+    private boolean isRunning = false;
+    private int frameCount = 0;
 
-    public TileMap(Context context, InputStream inputStream)
+    public TileMap(Context context)
     {
-        if(context != null)
-        {
-            isInitialized = true;
-        }
-
         AssetManager assetManager = context.getAssets();
 
         String prefix = "tiles";
@@ -62,7 +56,7 @@ public class TileMap implements Observer
         {
             for(String path : assetManager.list(prefix))
             {
-                //tiles.add(new Tile(context, assetManager.open(prefix + "/" + path), path.contains("walk"), null));
+                tiles.add(new Tile(assetManager.open(prefix + "/" + path), path.contains("walk")));
             }
         }
         catch (IOException e)
@@ -72,15 +66,14 @@ public class TileMap implements Observer
 
         try
         {
-            CSVParser mapParser = new CSVParser(new InputStreamReader(inputStream), CSVFormat.DEFAULT);
+            CSVParser mapParser = new CSVParser(new InputStreamReader(assetManager.open("maps/outside.csv")), CSVFormat.DEFAULT);
 
             List<CSVRecord> rows = mapParser.getRecords();
 
             width = Integer.parseInt(rows.get(0).get(0));
             height = Integer.parseInt(rows.get(0).get(1));
-
-            offset_x = Integer.parseInt(rows.get(0).get(2)) * 400;
-            offset_y = Integer.parseInt(rows.get(0).get(3)) * 400;
+            position_x = Integer.parseInt(rows.get(0).get(2));
+            position_y = Integer.parseInt(rows.get(0).get(3));
 
             map = new int[width][height];
 
@@ -103,52 +96,146 @@ public class TileMap implements Observer
     @Override
     public void draw(Canvas canvas) throws DrawableNotInitializedException
     {
-        if(!isInitialized)
-        {
-            throw new DrawableNotInitializedException(this.getClass());
-        }
-
-        Matrix _matrix = new Matrix();
-
         for(int i = 0; i < width; i++)
         {
             for(int j = 0; j < height; j++)
             {
-                _matrix.setTranslate((400 * i) + offset_x, (400 * j) + offset_y);
-
-                //tiles.get(map[i][j]).draw(canvas);
+                Tile tile = tiles.get(map[i][j]);
+                canvas.drawBitmap(tile.getBitmap(),
+                        (i * DIMENSIONS) + walk_offset_x + offset_x - (position_x * DIMENSIONS),
+                        (j * DIMENSIONS) + walk_offset_y + offset_y - (position_y * DIMENSIONS),
+                        null);
             }
         }
     }
 
     @Override
-    public void update(Subject.TouchEvent touchEvent) {
-
+    public void update(Subject.TouchEvent touchEvent)
+    {
+        start(new TileMapAnimationArguments(touchEvent));
     }
 
     @Override
-    public void start(AnimationArguments animationArgs) {
+    public void start(AnimationArguments animationArgs)
+    {
+        current = ((TileMapAnimationArguments)animationArgs).direction;
 
+        boolean isWalkable = false;
+
+        switch(current)
+        {
+            case UP:
+                isWalkable = tiles.get(map[position_x][position_y + 1]).isWalkable();
+                break;
+            case DOWN:
+                isWalkable = tiles.get(map[position_x][position_y - 1]).isWalkable();
+                break;
+            case LEFT:
+                isWalkable = tiles.get(map[position_x - 1][position_y]).isWalkable();
+                break;
+            case RIGHT:
+                isWalkable = tiles.get(map[position_x + 1][position_y]).isWalkable();
+                break;
+        }
+
+        if(isWalkable)
+        {
+            isRunning = true;
+        }
+        else
+        {
+            current = null;
+        }
     }
 
     @Override
-    public void next() {
+    public void next()
+    {
+        switch(current)
+        {
+            case UP:
+                walk_offset_y += DIMENSIONS/FRAMES;
+                break;
+            case DOWN:
+                walk_offset_y -= DIMENSIONS/FRAMES;
+                break;
+            case LEFT:
+                walk_offset_x -= DIMENSIONS/FRAMES;
+                break;
+            case RIGHT:
+                walk_offset_x += DIMENSIONS/FRAMES;
+                break;
+        }
 
+        frameCount++;
     }
 
     @Override
-    public boolean isRunning() {
-        return false;
+    public boolean isRunning()
+    {
+        return isRunning;
     }
 
     @Override
-    public boolean isComplete() {
-        return false;
+    public boolean isComplete()
+    {
+        return frameCount > FRAMES;
     }
 
     @Override
-    public void finish() {
+    public void finish()
+    {
+        switch(current)
+        {
+            case UP:
+                position_y++;
+                break;
+            case DOWN:
+                position_y--;
+                break;
+            case LEFT:
+                position_x--;
+                break;
+            case RIGHT:
+                position_x++;
+                break;
+        }
 
+        frameCount = 0;
+        current = null;
+        isRunning = false;
+
+        walk_offset_x = 0;
+        walk_offset_y = 0;
+    }
+
+    private static class TileMapAnimationArguments implements AnimationArguments
+    {
+        Direction direction;
+
+        TileMapAnimationArguments(Subject.TouchEvent touchEvent)
+        {
+            switch(touchEvent)
+            {
+                case SWIPE_UP:
+                    direction = UP;
+                    break;
+                case SWIPE_DOWN:
+                    direction = DOWN;
+                    break;
+                case SWIPE_LEFT:
+                    direction = LEFT;
+                    break;
+                case SWIPE_RIGHT:
+                    direction = RIGHT;
+                    break;
+            }
+        }
+    }
+
+    enum Direction
+    {
+        UP, DOWN, LEFT, RIGHT
     }
 
     private static class Tile
@@ -157,13 +244,21 @@ public class TileMap implements Observer
 
         private boolean isWalkable = false;
 
-        public Tile(Context context, InputStream inputStream, boolean isWalkable)
+        Tile(InputStream inputStream, boolean isWalkable)
         {
-            int tiles = context.getResources().getDimensionPixelSize(R.dimen.tiles);
-
-            bitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeStream(inputStream), 400, 400, false);
+            bitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeStream(inputStream), DIMENSIONS, DIMENSIONS, false);
 
             this.isWalkable = isWalkable;
+        }
+
+        Bitmap getBitmap()
+        {
+            return bitmap;
+        }
+
+        boolean isWalkable()
+        {
+            return isWalkable;
         }
     }
 }

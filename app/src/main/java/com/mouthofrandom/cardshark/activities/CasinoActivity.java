@@ -8,6 +8,7 @@ import android.view.WindowManager;
 
 import com.mouthofrandom.cardshark.R;
 import com.mouthofrandom.cardshark.graphics.Sprite;
+import com.mouthofrandom.cardshark.graphics.TileMap;
 import com.mouthofrandom.cardshark.graphics.utility.CardSharkView;
 
 public class CasinoActivity extends AppCompatActivity
@@ -25,6 +26,8 @@ public class CasinoActivity extends AppCompatActivity
         //housekeeping
         super.onCreate(savedInstanceState);
 
+        new TileMap(getApplicationContext());
+
         //call main activity
         setContentView(R.layout.activity_casino);
 
@@ -36,7 +39,7 @@ class CasinoView extends CardSharkView
 {
     public CasinoView(Context context, AttributeSet attrs)
     {
-        super(context, attrs, new Sprite(context));
+        super(context, attrs, new TileMap(context), new Sprite(context));
     }
 }
 

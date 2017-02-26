@@ -1,24 +1,27 @@
-package com.mouthofrandom.cardshark.graphics.utility;
+package com.mouthofrandom.cardshark.graphics;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.util.DisplayMetrics;
+import android.view.WindowManager;
 
 import com.mouthofrandom.cardshark.R;
+import com.mouthofrandom.cardshark.graphics.utility.Observer;
+import com.mouthofrandom.cardshark.graphics.utility.Subject;
 
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by coleman on 2/21/17.
- */
+import static com.mouthofrandom.cardshark.graphics.Sprite.Direction.*;
 
-class Sprite implements Drawable
+public class Sprite implements Observer
 {
-    public static int WALK_FRAMES = 32;
-    public static int WALK_TIME = 200;
+    private static int WALK_FRAMES = 32;
+
+    private boolean isRunning = false;
 
     enum Direction
     {
@@ -43,13 +46,16 @@ class Sprite implements Drawable
             RIGHT_WALK_LEFT = "right_walk_left",
             RIGHT_WALK_RIGHT = "right_walk_right";
 
-    private Direction current = Direction.FRONT;
+    private Direction current = FRONT;
 
     private Bitmap bitmap = null;
 
     private int walkCount = 0;
 
-    Sprite(Context context)
+    private int draw_x;
+    private int draw_y;
+
+    public Sprite(Context context)
     {
         bitmaps = new HashMap<>();
 
@@ -111,10 +117,36 @@ class Sprite implements Drawable
 
         bitmaps.put(RIGHT_WALK_LEFT, Bitmap.createBitmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), m, true));
 
+        DisplayMetrics metrics = new DisplayMetrics();
+        ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(metrics);
+
+        draw_x = (metrics.widthPixels/2) - (bitmap.getWidth()/2);
+        draw_y = (metrics.heightPixels/2) - (bitmap.getHeight()/2);
+
         wasInitialized = true;
     }
 
-    public void walk()
+    @Override
+    public void draw(Canvas canvas) throws DrawableNotInitializedException
+    {
+        if(!wasInitialized)
+        {
+            throw new DrawableNotInitializedException(this.getClass());
+        }
+
+        canvas.drawBitmap(bitmap, draw_x, draw_y, null);
+    }
+
+    @Override
+    public void start(AnimationArguments animationArgs)
+    {
+        current = ((SpriteAnimationArguments)animationArgs).direction;
+
+        isRunning = true;
+    }
+
+    @Override
+    public void next()
     {
         walkCount++;
 
@@ -177,14 +209,22 @@ class Sprite implements Drawable
 
                 break;
         }
-
-        if(walkCount == WALK_FRAMES)
-        {
-            stop();
-        }
     }
 
-    public void stop()
+    @Override
+    public boolean isRunning()
+    {
+        return isRunning;
+    }
+
+    @Override
+    public boolean isComplete()
+    {
+        return walkCount > WALK_FRAMES;
+    }
+
+    @Override
+    public void finish()
     {
         switch(current)
         {
@@ -203,28 +243,37 @@ class Sprite implements Drawable
         }
 
         walkCount = 0;
-    }
 
-    public void turn(Direction direction)
-    {
-        current = direction;
-
-        stop();
-    }
-
-    public int getWalkCount()
-    {
-        return walkCount;
+        isRunning = false;
     }
 
     @Override
-    public void draw(Canvas canvas) throws DrawableNotInitializedException
+    public void update(Subject.TouchEvent touchEvent)
     {
-        if(!wasInitialized)
+        start(new SpriteAnimationArguments(touchEvent));
+    }
+
+    private static class SpriteAnimationArguments implements AnimationArguments
+    {
+        SpriteAnimationArguments(Subject.TouchEvent touchEvent)
         {
-            throw new DrawableNotInitializedException(this.getClass());
+            switch(touchEvent)
+            {
+                case SWIPE_UP:
+                    direction = BACK;
+                    break;
+                case SWIPE_DOWN:
+                    direction = FRONT;
+                    break;
+                case SWIPE_LEFT:
+                    direction = LEFT;
+                    break;
+                case SWIPE_RIGHT:
+                    direction = RIGHT;
+                    break;
+            }
         }
 
-        canvas.drawBitmap(bitmap, 576, 864, null);
+        Direction direction;
     }
 }

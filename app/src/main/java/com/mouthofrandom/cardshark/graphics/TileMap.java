@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
+import com.mouthofrandom.cardshark.activities.CasinoActivity;
+import com.mouthofrandom.cardshark.game.ActionFactory;
 import com.mouthofrandom.cardshark.graphics.utility.Observer;
 import com.mouthofrandom.cardshark.graphics.utility.Subject;
 
@@ -29,6 +31,8 @@ public class TileMap implements Observer
     private static final int offset_x = (-DIMENSIONS/2) + (Resources.getSystem().getDisplayMetrics().widthPixels/2);
     private static final int offset_y = (-DIMENSIONS/2) + (DIMENSIONS/3) + (Resources.getSystem().getDisplayMetrics().heightPixels/2);
 
+    Context context;
+
     private List<Tile> tiles;
     private int[][] map;
 
@@ -46,6 +50,8 @@ public class TileMap implements Observer
 
     public TileMap(Context context)
     {
+        this.context = context;
+
         AssetManager assetManager = context.getAssets();
 
         String prefix = "tiles";
@@ -72,8 +78,8 @@ public class TileMap implements Observer
 
             width = Integer.parseInt(rows.get(0).get(0));
             height = Integer.parseInt(rows.get(0).get(1));
-            position_x = Integer.parseInt(rows.get(0).get(2));
-            position_y = Integer.parseInt(rows.get(0).get(3));
+            position_y = Integer.parseInt(rows.get(0).get(2));
+            position_x = Integer.parseInt(rows.get(0).get(3));
 
             map = new int[width][height];
 
@@ -125,16 +131,16 @@ public class TileMap implements Observer
         switch(current)
         {
             case UP:
-                isWalkable = tiles.get(map[position_x][position_y + 1]).isWalkable();
-                break;
-            case DOWN:
                 isWalkable = tiles.get(map[position_x][position_y - 1]).isWalkable();
                 break;
+            case DOWN:
+                isWalkable = tiles.get(map[position_x][position_y + 1]).isWalkable();
+                break;
             case LEFT:
-                isWalkable = tiles.get(map[position_x - 1][position_y]).isWalkable();
+                isWalkable = tiles.get(map[position_x + 1][position_y]).isWalkable();
                 break;
             case RIGHT:
-                isWalkable = tiles.get(map[position_x + 1][position_y]).isWalkable();
+                isWalkable = tiles.get(map[position_x - 1][position_y]).isWalkable();
                 break;
         }
 
@@ -188,17 +194,26 @@ public class TileMap implements Observer
         switch(current)
         {
             case UP:
-                position_y++;
-                break;
-            case DOWN:
                 position_y--;
                 break;
-            case LEFT:
-                position_x--;
+            case DOWN:
+                position_y++;
                 break;
-            case RIGHT:
+            case LEFT:
                 position_x++;
                 break;
+            case RIGHT:
+                position_x--;
+                break;
+        }
+
+        if(current == UP)
+        {
+            ((CasinoActivity) context).setButtonAction(ActionFactory.buildAction(ActionFactory.ROULETTE));
+        }
+        else
+        {
+            ((CasinoActivity) context).setButtonAction(ActionFactory.buildAction(ActionFactory.NO_ACTION));
         }
 
         frameCount = 0;
@@ -207,6 +222,7 @@ public class TileMap implements Observer
 
         walk_offset_x = 0;
         walk_offset_y = 0;
+
     }
 
     private static class TileMapAnimationArguments implements AnimationArguments

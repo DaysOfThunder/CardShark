@@ -248,9 +248,9 @@ public class Sprite implements Observer
     }
 
     @Override
-    public void update(Subject.TouchEvent touchEvent)
+    public void update(Subject.Event event)
     {
-        start(new SpriteAnimationArguments(touchEvent));
+        start(new SpriteAnimationArguments(((Subject.TouchEvent)event)));
     }
 
     private static class SpriteAnimationArguments implements AnimationArguments

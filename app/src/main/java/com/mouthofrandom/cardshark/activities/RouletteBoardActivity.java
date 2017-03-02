@@ -9,9 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.mouthofrandom.cardshark.games.roulette.RouletteTable;
-
 import com.mouthofrandom.cardshark.R;
+import com.mouthofrandom.cardshark.game.roulette.RouletteTable;
 
 public class RouletteBoardActivity extends AppCompatActivity {
 

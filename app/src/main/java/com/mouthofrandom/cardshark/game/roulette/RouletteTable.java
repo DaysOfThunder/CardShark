@@ -5,7 +5,9 @@ package com.mouthofrandom.cardshark.game.roulette;// ===========================
 // Last-Updated: Fri Feb 24 17:59:26 2017 (-0600)
 // Author: Ivan Guerra <Ivan.E.Guerra-1@ou.edu>
 // ======================================================================
-package com.mouthofrandom.cardshark.games.roulette;
+
+import java.util.Random;
+
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;

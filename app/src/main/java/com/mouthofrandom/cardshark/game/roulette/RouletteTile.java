@@ -6,8 +6,6 @@ package com.mouthofrandom.cardshark.game.roulette;// ===========================
 // Author: Ivan Guerra <Ivan.E.Guerra-1@ou.edu>
 // ======================================================================
 
-package com.mouthofrandom.cardshark.games.roulette;
-
 class RouletteTile {
     private String color;
     private String descriptor;

@@ -6,6 +6,8 @@
 // Author: Ivan Guerra <Ivan.E.Guerra-1@ou.edu>
 // ======================================================================
 
+package com.mouthofrandom.cardshark.games.roulette;
+
 class RouletteTile {
     private String color;
     private String descriptor;
@@ -60,6 +62,8 @@ class RouletteTile {
     public void setBetAmount(int betAmount) {
 	this.betAmount = betAmount;
     }
+
+    public void addBetAmount(int betAmount) { this.betAmount += betAmount; }
 
     public void setWinner(boolean winner) {
 	this.winner = winner;

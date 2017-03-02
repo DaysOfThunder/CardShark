@@ -5,27 +5,29 @@
 // Last-Updated: Fri Feb 24 17:59:26 2017 (-0600)
 // Author: Ivan Guerra <Ivan.E.Guerra-1@ou.edu>
 // ======================================================================
+package com.mouthofrandom.cardshark.games.roulette;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Random;
 
-class RouletteTable {
+public class RouletteTable {
     /* Constants used in generating random roulette wheel values. */
     private static final int LOWERBOUND = 0;
-    private static final int UPPERBOUND = 36;
+    private static final int UPPERBOUND = 18;
     private static final Random WHEEL_RNG = new Random();
 
     /* Constant used to represent non-numeric game board tile descriptors. */
     private static final String RED = "RED";
     private static final String BLACK = "BLACK";
+	private static final String GREEN = "GREEN";
     private static final String ODD = "ODD";
     private static final String EVEN = "EVEN";
-    private static final String ONE_TO_EIGHTEEN = "1 to 18";
-    private static final String NINETEEN_TO_THIRTYSIX = "19 to 36";
-    private static final String FIRST_TWELVE = "1st 12";
-    private static final String SECOND_TWELVE = "2nd 12";
-    private static final String THIRD_TWELVE = "3rd 12";
+//    private static final String ONE_TO_EIGHTEEN = "1 to 18";
+//    private static final String NINETEEN_TO_THIRTYSIX = "19 to 36";
+    private static final String FIRST_SIX = "1st 6";
+    private static final String SECOND_SIX = "2nd 6";
+    private static final String THIRD_SIX = "3rd 6";
 
     private HashMap<String, RouletteTile> boardTiles;
     private ArrayList<RouletteTile> betTiles;  /* List containing tiles the user has placed bets on. */
@@ -37,21 +39,23 @@ class RouletteTable {
 
     /* Initializes the roulette game board tile map. */
     private void initBoard() {
-	for (int i = 0; i < UPPERBOUND+1; i++) {
+	for (int i = 1; i < UPPERBOUND+1; i++) {
 	    String descriptor = String.valueOf(i);
 	    if (0 == i % 2) {
-		boardTiles.put(descriptor, new RouletteTile(descriptor, BLACK, 0, 35));
+		boardTiles.put(descriptor, new RouletteTile(descriptor, BLACK, 0, 17));
 	    } else {
-		boardTiles.put(descriptor, new RouletteTile(descriptor, RED, 0, 35));
+		boardTiles.put(descriptor, new RouletteTile(descriptor, RED, 0, 17));
 	    }
 	}
 
-	boardTiles.put(FIRST_TWELVE, new RouletteTile(FIRST_TWELVE, 0, 2));
-	boardTiles.put(SECOND_TWELVE, new RouletteTile(SECOND_TWELVE, 0, 2));
-	boardTiles.put(THIRD_TWELVE, new RouletteTile(THIRD_TWELVE, 0, 2));
+	boardTiles.put("0", new RouletteTile("0", GREEN, 0, 17));
 
-	boardTiles.put(ONE_TO_EIGHTEEN, new RouletteTile(ONE_TO_EIGHTEEN, 0, 1));
-	boardTiles.put(NINETEEN_TO_THIRTYSIX, new RouletteTile(NINETEEN_TO_THIRTYSIX, 0, 1));
+	boardTiles.put(FIRST_SIX, new RouletteTile(FIRST_SIX, 0, 2));
+	boardTiles.put(SECOND_SIX, new RouletteTile(SECOND_SIX, 0, 2));
+	boardTiles.put(THIRD_SIX, new RouletteTile(THIRD_SIX, 0, 2));
+
+//	boardTiles.put(ONE_TO_EIGHTEEN, new RouletteTile(ONE_TO_EIGHTEEN, 0, 1));
+//	boardTiles.put(NINETEEN_TO_THIRTYSIX, new RouletteTile(NINETEEN_TO_THIRTYSIX, 0, 1));
 
 	boardTiles.put(EVEN, new RouletteTile(EVEN, 0, 1));
 	boardTiles.put(ODD, new RouletteTile(ODD, 0, 1));
@@ -63,6 +67,10 @@ class RouletteTable {
     /* Clear the bets placed on the board. */
     private void clearBoard() {
 	betTiles.clear();
+	for(String id : boardTiles.keySet())
+	{
+		boardTiles.get(id).setBetAmount(0);
+	}
     }
 
     public RouletteTable() {
@@ -103,11 +111,52 @@ class RouletteTable {
 	}
     }
 
+	/**
+	 *
+	 * @param id
+	 * @param value
+     */
+	public void placeSingleBet(String id, int value)
+	{
+		RouletteTile selectedTile = boardTiles.get(id);
+
+		selectedTile.setBetAmount(value);
+		if(!betTiles.contains(selectedTile)) {
+			betTiles.add(selectedTile);
+		}
+	}
+
+	/**
+	 *
+	 * @param id
+	 * @param value
+	 */
+	public void addSingleBet(String id, int value)
+	{
+		RouletteTile selectedTile = boardTiles.get(id);
+
+		selectedTile.addBetAmount(value);
+		if(!betTiles.contains(selectedTile)) {
+			betTiles.add(selectedTile);
+		}
+	}
+
+	/**
+	 *
+	 * @param id
+	 * @return
+     */
+	public int getTileBetAmount(String id)
+	{
+		RouletteTile selectedTile = boardTiles.get(id);
+		return selectedTile.getBetAmount();
+	}
+
     /* 
      * Pick a random numeric tile in the game board and then loop through betTiles setting the tiles corresponding winner attribute
      * to true if the tile satisfy any of the roulette win conditions.
      */
-    public void play() {
+    public int play() {
 	RouletteTile winTile = boardTiles.get(spinWheel());
 	System.out.println("RNG Tile: (" + winTile.getDescriptor() + ", " + winTile.getColor() + ")");
 	int winTileValue = Integer.parseInt(winTile.getDescriptor());
@@ -116,19 +165,19 @@ class RouletteTable {
 	    System.out.println("User Bet Tile: (" + t.getDescriptor() + ", " + String.valueOf(t.getBetAmount()) + ")");
 	    if (t.getDescriptor().equals(winTile.getDescriptor())) {
 		t.setWinner(true);
-	    } else if (0 == winTileValue % 2 && EVEN.equals(t.getDescriptor())) {
+	    } else if (0 == winTileValue % 2 && 0 != winTileValue && EVEN.equals(t.getDescriptor())) {
 		t.setWinner(true);
 	    } else if (0 != winTileValue % 2 && ODD.equals(t.getDescriptor())) {
 		t.setWinner(true);
-	    } else if ((winTileValue >= 1 && winTileValue <= 18) && ONE_TO_EIGHTEEN.equals(t.getDescriptor())) {
+//	    } else if ((winTileValue >= 1 && winTileValue <= 18) && ONE_TO_EIGHTEEN.equals(t.getDescriptor())) {
+//		t.setWinner(true);
+//	    } else if ((winTileValue >= 19 && winTileValue <= 36) && NINETEEN_TO_THIRTYSIX.equals(t.getDescriptor())) {
+//		t.setWinner(true);
+	    } else if ((winTileValue >= 1 && winTileValue <= 6) && FIRST_SIX.equals(t.getDescriptor())) {
 		t.setWinner(true);
-	    } else if ((winTileValue >= 19 && winTileValue <= 36) && NINETEEN_TO_THIRTYSIX.equals(t.getDescriptor())) {
+	    } else if ((winTileValue >= 7 && winTileValue <= 12) && SECOND_SIX.equals(t.getDescriptor())) {
 		t.setWinner(true);
-	    } else if ((winTileValue >= 1 && winTileValue <= 12) && FIRST_TWELVE.equals(t.getDescriptor())) {
-		t.setWinner(true);
-	    } else if ((winTileValue >= 13 && winTileValue <= 24) && SECOND_TWELVE.equals(t.getDescriptor())) {
-		t.setWinner(true);
-	    } else if ((winTileValue >= 25 && winTileValue <= 36) && THIRD_TWELVE.equals(t.getDescriptor())) {
+	    } else if ((winTileValue >= 13 && winTileValue <= 18) && THIRD_SIX.equals(t.getDescriptor())) {
 		t.setWinner(true);
 	    } else if (RED.equals(winTile.getColor()) && RED.equals(t.getDescriptor())) {
 		t.setWinner(true);
@@ -136,5 +185,7 @@ class RouletteTable {
 		t.setWinner(true);
 	    }
 	}
+
+	return winTileValue;
     }
 }

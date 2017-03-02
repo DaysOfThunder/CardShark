@@ -2,7 +2,10 @@ package com.mouthofrandom.cardshark.graphics;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 
 import com.mouthofrandom.cardshark.activities.RouletteBoardActivity;
 import com.mouthofrandom.cardshark.graphics.utility.Observer;
@@ -14,15 +17,34 @@ import com.mouthofrandom.cardshark.graphics.utility.Subject;
 
 public class ActionButton implements Observer
 {
+    private static final int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
+    private static final int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
+
+    public static final int buttonDiameter = screenHeight / 16;
+
+    private static final int FRAMES = 30;
+
     private Context context;
 
     private Subject.ActionEvent event;
 
     private boolean isRunning = false;
 
+    private int frameCount = 0;
+    private boolean imageOn = false;
+
+    public ActionButton() {}
+
     public ActionButton(Context context)
     {
+        setContext(context);
+    }
+
+    public ActionButton setContext(Context context)
+    {
         this.context = context;
+
+        return this;
     }
 
     @Override
@@ -45,6 +67,7 @@ public class ActionButton implements Observer
                 switch(this.event)
                 {
                     case NONE:
+                        frameCount = 0;
                         break;
                     case ROULETTE:
                         context.startActivity(new Intent(context, RouletteBoardActivity.class));
@@ -63,7 +86,15 @@ public class ActionButton implements Observer
     @Override
     public void next()
     {
-
+        if(frameCount < FRAMES)
+        {
+            frameCount++;
+        }
+        else
+        {
+            imageOn = !imageOn;
+            frameCount = 0;
+        }
     }
 
     @Override
@@ -87,6 +118,20 @@ public class ActionButton implements Observer
     @Override
     public void draw(Canvas canvas) throws DrawableNotInitializedException
     {
+        if(isRunning)
+        {
+            Paint p = new Paint();
 
+            if (imageOn)
+            {
+                p.setColor(Color.BLUE);
+            }
+            else
+            {
+                p.setColor(Color.BLACK);
+            }
+
+            canvas.drawCircle((int)(.7 * screenWidth), (int)(.7 * screenHeight), (screenHeight/16), p);
+        }
     }
 }

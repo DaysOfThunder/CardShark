@@ -38,15 +38,11 @@ public class CasinoActivity extends AppCompatActivity
 
 class CasinoView extends CardSharkView
 {
+    private static ActionButton actionButton = new ActionButton();
+
     public CasinoView(Context context, AttributeSet attrs)
     {
-        TileMap tileMap = new TileMap(context);
-        Sprite sprite = new Sprite(context);
-        ActionButton actionButton = new ActionButton(context);
-
-        tileMap.addObserver(actionButton);
-
-        super(context, attrs, tileMap, sprite, actionButton);
+        super(context, attrs, new TileMap(context, actionButton.setContext(context)), new Sprite(context), actionButton);
     }
 }
 

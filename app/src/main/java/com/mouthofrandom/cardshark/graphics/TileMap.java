@@ -31,7 +31,7 @@ public class TileMap implements Observer, Subject
     private static final int offset_x = (-DIMENSIONS/2) + (Resources.getSystem().getDisplayMetrics().widthPixels/2);
     private static final int offset_y = (-DIMENSIONS/2) + (DIMENSIONS/3) + (Resources.getSystem().getDisplayMetrics().heightPixels/2);
 
-    Context context;
+    private Context context;
 
     private List<Tile> tiles;
     private int[][] map;

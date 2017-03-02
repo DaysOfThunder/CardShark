@@ -1,4 +1,4 @@
-// ======================================================================
+package com.mouthofrandom.cardshark.game.roulette;// ======================================================================
 // Filename: RouletteTable.java
 // Description: Define and implement an American Roulette board.
 // Created: Fri Feb 24 13:14:29 2017 (-0600)

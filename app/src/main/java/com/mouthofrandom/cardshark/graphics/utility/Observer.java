@@ -5,5 +5,5 @@ package com.mouthofrandom.cardshark.graphics.utility;
  */
 public interface Observer extends Animatable
 {
-    void update(Subject.TouchEvent touchEvent);
+    void update(Subject.Event event);
 }

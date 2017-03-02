@@ -1,4 +1,4 @@
-// ======================================================================
+package com.mouthofrandom.cardshark.game.roulette;// ======================================================================
 // Filename: RouletteTile.java
 // Description: Define and Implement a Roulette game tile.
 // Created: Fri Feb 24 16:01:38 2017 (-0600)

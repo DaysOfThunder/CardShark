@@ -156,15 +156,21 @@ public class CardSharkView extends SurfaceView implements SurfaceHolder.Callback
     }
 
     @Override
-    public void notify(TouchEvent touchEvent)
+    public void notify(Event event)
     {
         for(Drawable element : elements)
         {
             if(element instanceof Observer)
             {
-                ((Observer) element).update(touchEvent);
+                ((Observer) element).update(event);
             }
         }
+    }
+
+    @Override
+    public void addObserver(Observer observer)
+    {
+        this.elements.add(observer);
     }
 
     private class Animation extends Thread

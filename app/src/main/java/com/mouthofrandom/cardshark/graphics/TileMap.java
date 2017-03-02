@@ -18,16 +18,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import static com.mouthofrandom.cardshark.graphics.TileMap.Direction.*;
 
-public class TileMap implements Observer
+public class TileMap implements Observer, Subject
 {
     private static final int DIMENSIONS = 416;
     private static final int FRAMES = 32;
     private static final int offset_x = (-DIMENSIONS/2) + (Resources.getSystem().getDisplayMetrics().widthPixels/2);
     private static final int offset_y = (-DIMENSIONS/2) + (DIMENSIONS/3) + (Resources.getSystem().getDisplayMetrics().heightPixels/2);
+
+    private Context context;
 
     private List<Tile> tiles;
     private int[][] map;
@@ -43,9 +47,16 @@ public class TileMap implements Observer
     private Direction current;
     private boolean isRunning = false;
     private int frameCount = 0;
+    private Collection<Observer> observers;
 
-    public TileMap(Context context)
+    public TileMap(Context context, Observer... observers)
     {
+        this.context = context;
+
+        this.observers = new ArrayList<>();
+
+        this.observers.addAll(Arrays.asList(observers));
+
         AssetManager assetManager = context.getAssets();
 
         String prefix = "tiles";
@@ -56,7 +67,7 @@ public class TileMap implements Observer
         {
             for(String path : assetManager.list(prefix))
             {
-                tiles.add(new Tile(assetManager.open(prefix + "/" + path), path.contains("walk")));
+                tiles.add(new Tile(assetManager.open(prefix + "/" + path), path.contains("walk"), ActionEvent.match(path)));
             }
         }
         catch (IOException e)
@@ -72,8 +83,8 @@ public class TileMap implements Observer
 
             width = Integer.parseInt(rows.get(0).get(0));
             height = Integer.parseInt(rows.get(0).get(1));
-            position_x = Integer.parseInt(rows.get(0).get(2));
-            position_y = Integer.parseInt(rows.get(0).get(3));
+            position_y = Integer.parseInt(rows.get(0).get(2));
+            position_x = Integer.parseInt(rows.get(0).get(3));
 
             map = new int[width][height];
 
@@ -110,9 +121,9 @@ public class TileMap implements Observer
     }
 
     @Override
-    public void update(Subject.TouchEvent touchEvent)
+    public void update(Subject.Event event)
     {
-        start(new TileMapAnimationArguments(touchEvent));
+        start(new TileMapAnimationArguments(((Subject.TouchEvent) event)));
     }
 
     @Override
@@ -125,16 +136,16 @@ public class TileMap implements Observer
         switch(current)
         {
             case UP:
-                isWalkable = tiles.get(map[position_x][position_y + 1]).isWalkable();
-                break;
-            case DOWN:
                 isWalkable = tiles.get(map[position_x][position_y - 1]).isWalkable();
                 break;
+            case DOWN:
+                isWalkable = tiles.get(map[position_x][position_y + 1]).isWalkable();
+                break;
             case LEFT:
-                isWalkable = tiles.get(map[position_x - 1][position_y]).isWalkable();
+                isWalkable = tiles.get(map[position_x + 1][position_y]).isWalkable();
                 break;
             case RIGHT:
-                isWalkable = tiles.get(map[position_x + 1][position_y]).isWalkable();
+                isWalkable = tiles.get(map[position_x - 1][position_y]).isWalkable();
                 break;
         }
 
@@ -185,21 +196,34 @@ public class TileMap implements Observer
     @Override
     public void finish()
     {
+        int facing_x = 0;
+        int facing_y = 0;
+
         switch(current)
         {
             case UP:
-                position_y++;
+                position_y--;
+                facing_x = position_x;
+                facing_y = position_y - 1;
                 break;
             case DOWN:
-                position_y--;
+                position_y++;
+                facing_x = position_x;
+                facing_y = position_y + 1;
                 break;
             case LEFT:
-                position_x--;
+                position_x++;
+                facing_x = position_x + 1;
+                facing_y = position_y;
                 break;
             case RIGHT:
-                position_x++;
+                position_x--;
+                facing_x = position_x - 1;
+                facing_y = position_y;
                 break;
         }
+
+        notify(tiles.get(map[facing_x][facing_y]).actionEvent);
 
         frameCount = 0;
         current = null;
@@ -207,6 +231,22 @@ public class TileMap implements Observer
 
         walk_offset_x = 0;
         walk_offset_y = 0;
+
+    }
+
+    @Override
+    public void notify(Event event)
+    {
+        for(Observer observer : observers)
+        {
+            observer.update(event);
+        }
+    }
+
+    @Override
+    public void addObserver(Observer observer)
+    {
+        this.observers.add(observer);
     }
 
     private static class TileMapAnimationArguments implements AnimationArguments
@@ -244,11 +284,15 @@ public class TileMap implements Observer
 
         private boolean isWalkable = false;
 
-        Tile(InputStream inputStream, boolean isWalkable)
+        private ActionEvent actionEvent;
+
+        Tile(InputStream inputStream, boolean isWalkable, ActionEvent actionEvent)
         {
             bitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeStream(inputStream), DIMENSIONS, DIMENSIONS, false);
 
             this.isWalkable = isWalkable;
+
+            this.actionEvent = actionEvent;
         }
 
         Bitmap getBitmap()

@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.WindowManager;
 
 import com.mouthofrandom.cardshark.R;
+import com.mouthofrandom.cardshark.graphics.ActionButton;
 import com.mouthofrandom.cardshark.graphics.Sprite;
 import com.mouthofrandom.cardshark.graphics.TileMap;
 import com.mouthofrandom.cardshark.graphics.utility.CardSharkView;
@@ -37,9 +38,11 @@ public class CasinoActivity extends AppCompatActivity
 
 class CasinoView extends CardSharkView
 {
+    private static ActionButton actionButton = new ActionButton();
+
     public CasinoView(Context context, AttributeSet attrs)
     {
-        super(context, attrs, new TileMap(context), new Sprite(context));
+        super(context, attrs, new TileMap(context, actionButton.setContext(context)), new Sprite(context), actionButton);
     }
 }
 

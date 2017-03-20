@@ -6,7 +6,7 @@
 // Last-Updated: Mon Mar 20 11:46:58 2017 (-0500)
 // Author: Ivan Guerra <Ivan.E.Guerra-1@ou.edu>
 // ======================================================================
-//package com.mouthofrandom.cardshark.game.blackjack;
+package com.mouthofrandom.cardshark.game.blackjack;
 
 import java.util.Random;
 

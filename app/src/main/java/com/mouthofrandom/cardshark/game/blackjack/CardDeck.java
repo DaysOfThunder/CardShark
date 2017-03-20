@@ -3,10 +3,10 @@
 // Description: Implement an interface for accessing a standard 52 card
 // deck.
 // Created: Mon Mar 20 10:00:29 2017 (-0500)
-// Last-Updated: Mon Mar 20 11:36:18 2017 (-0500)
+// Last-Updated: Mon Mar 20 11:46:58 2017 (-0500)
 // Author: Ivan Guerra <Ivan.E.Guerra-1@ou.edu>
 // ======================================================================
-package com.mouthofrandom.cardshark.game.blackjack;
+//package com.mouthofrandom.cardshark.game.blackjack;
 
 import java.util.Random;
 
@@ -58,8 +58,8 @@ public class CardDeck {
 
     /* Return the maximum size of the deck. */
     public int getSize() {
-        return this.DECK_SIZE
-            }
+        return this.DECK_SIZE;
+    }
 
     /* Return the number of cards currently stored in the deck. */
     public int getCurrentCount() {
@@ -68,6 +68,9 @@ public class CardDeck {
 
     /* Return a Card object from the top of the deck. */
     public Card deal() {
+	if (activeCardCount <= 0) {
+	    System.out.println("ERROR: EMPTY DECK");
+	}
         return cards[--activeCardCount];
     }
 

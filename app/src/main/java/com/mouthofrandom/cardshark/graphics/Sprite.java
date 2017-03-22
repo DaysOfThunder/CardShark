@@ -250,6 +250,11 @@ public class Sprite implements Observer
     @Override
     public void update(Subject.Event event)
     {
+        if(event == Subject.TouchEvent.TOUCH_BUTTON)
+        {
+            return;
+        }
+
         start(new SpriteAnimationArguments(((Subject.TouchEvent)event)));
     }
 

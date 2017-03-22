@@ -14,6 +14,7 @@ import com.mouthofrandom.cardshark.graphics.utility.CardSharkView;
 
 public class CasinoActivity extends AppCompatActivity
 {
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -27,22 +28,51 @@ public class CasinoActivity extends AppCompatActivity
         //housekeeping
         super.onCreate(savedInstanceState);
 
-        new TileMap(getApplicationContext());
-
-        //call main activity
         setContentView(R.layout.activity_casino);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);   //set fullscreen
     }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        CasinoView.pause();
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        CasinoView.resume();
+    }
+
+
 }
 
 class CasinoView extends CardSharkView
 {
+    private static CasinoView instance = null;
+
     private static ActionButton actionButton = new ActionButton();
 
     public CasinoView(Context context, AttributeSet attrs)
     {
         super(context, attrs, new TileMap(context, actionButton.setContext(context)), new Sprite(context), actionButton);
+
+        instance = this;
+    }
+
+    public static void pause()
+    {
+        instance.onPause();
+    }
+
+    public static void resume()
+    {
+        instance.onResume();
     }
 }
 

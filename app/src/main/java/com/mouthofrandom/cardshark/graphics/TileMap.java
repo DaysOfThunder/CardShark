@@ -31,8 +31,6 @@ public class TileMap implements Observer, Subject
     private static final int offset_x = (-DIMENSIONS/2) + (Resources.getSystem().getDisplayMetrics().widthPixels/2);
     private static final int offset_y = (-DIMENSIONS/2) + (DIMENSIONS/3) + (Resources.getSystem().getDisplayMetrics().heightPixels/2);
 
-    private Context context;
-
     private List<Tile> tiles;
     private int[][] map;
 
@@ -45,14 +43,13 @@ public class TileMap implements Observer, Subject
     private int walk_offset_y = 0;
 
     private Direction current;
+    private ActionEvent currentEvent;
     private boolean isRunning = false;
     private int frameCount = 0;
     private Collection<Observer> observers;
 
     public TileMap(Context context, Observer... observers)
     {
-        this.context = context;
-
         this.observers = new ArrayList<>();
 
         this.observers.addAll(Arrays.asList(observers));
@@ -86,6 +83,8 @@ public class TileMap implements Observer, Subject
             position_y = Integer.parseInt(rows.get(0).get(2));
             position_x = Integer.parseInt(rows.get(0).get(3));
 
+            current = DOWN;
+
             map = new int[width][height];
 
             for(int i = 0; i < width; i++)
@@ -102,6 +101,8 @@ public class TileMap implements Observer, Subject
         {
             e.printStackTrace();
         }
+
+        notify(tiles.get(map[position_x][position_y + 1]).actionEvent);
     }
 
     @Override
@@ -123,6 +124,11 @@ public class TileMap implements Observer, Subject
     @Override
     public void update(Subject.Event event)
     {
+        if(event == TouchEvent.TOUCH_BUTTON)
+        {
+            return;
+        }
+
         start(new TileMapAnimationArguments(((Subject.TouchEvent) event)));
     }
 
@@ -133,20 +139,38 @@ public class TileMap implements Observer, Subject
 
         boolean isWalkable = false;
 
+        int facing_x = 0;
+        int facing_y = 0;
+
         switch(current)
         {
             case UP:
                 isWalkable = tiles.get(map[position_x][position_y - 1]).isWalkable();
+                facing_x = position_x;
+                facing_y = position_y - (isWalkable ? 2 : 1);
                 break;
             case DOWN:
                 isWalkable = tiles.get(map[position_x][position_y + 1]).isWalkable();
+                facing_x = position_x;
+                facing_y = position_y + (isWalkable ? 2 : 1);
                 break;
             case LEFT:
                 isWalkable = tiles.get(map[position_x + 1][position_y]).isWalkable();
+                facing_x = position_x + (isWalkable ? 2 : 1);
+                facing_y = position_y;
                 break;
             case RIGHT:
                 isWalkable = tiles.get(map[position_x - 1][position_y]).isWalkable();
+                facing_x = position_x - (isWalkable ? 2 : 1);
+                facing_y = position_y;
                 break;
+        }
+
+        currentEvent = tiles.get(map[facing_x][facing_y]).actionEvent;
+
+        if(currentEvent == ActionEvent.NONE)
+        {
+            notify(currentEvent);
         }
 
         if(isWalkable)
@@ -155,6 +179,8 @@ public class TileMap implements Observer, Subject
         }
         else
         {
+            notify(currentEvent);
+            currentEvent = null;
             current = null;
         }
     }
@@ -196,38 +222,30 @@ public class TileMap implements Observer, Subject
     @Override
     public void finish()
     {
-        int facing_x = 0;
-        int facing_y = 0;
-
         switch(current)
         {
             case UP:
                 position_y--;
-                facing_x = position_x;
-                facing_y = position_y - 1;
                 break;
             case DOWN:
                 position_y++;
-                facing_x = position_x;
-                facing_y = position_y + 1;
                 break;
             case LEFT:
                 position_x++;
-                facing_x = position_x + 1;
-                facing_y = position_y;
                 break;
             case RIGHT:
                 position_x--;
-                facing_x = position_x - 1;
-                facing_y = position_y;
+                break;
+            default:
                 break;
         }
-
-        notify(tiles.get(map[facing_x][facing_y]).actionEvent);
 
         frameCount = 0;
         current = null;
         isRunning = false;
+
+        notify(currentEvent);
+        currentEvent = null;
 
         walk_offset_x = 0;
         walk_offset_y = 0;

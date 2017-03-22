@@ -8,6 +8,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.mouthofrandom.cardshark.graphics.ActionButton;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -118,6 +120,12 @@ public class CardSharkView extends SurfaceView implements SurfaceHolder.Callback
                         notify(TouchEvent.SWIPE_DOWN);
                     }
                 }
+                else if(ActionButton.isInButton(touch_x_start, touch_y_start) &&
+                        ActionButton.isInButton(touch_x_end, touch_y_end))
+                {
+                    notify(TouchEvent.TOUCH_BUTTON);
+                }
+
                 break;
         }
 
@@ -173,6 +181,22 @@ public class CardSharkView extends SurfaceView implements SurfaceHolder.Callback
         this.elements.add(observer);
     }
 
+    public void onPause()
+    {
+        if(animation != null)
+        {
+            animation.onPause();
+        }
+    }
+
+    public void onResume()
+    {
+        if(animation != null)
+        {
+            animation.onRestart();
+        }
+    }
+
     private class Animation extends Thread
     {
         private final SurfaceHolder surfaceHolder;
@@ -180,6 +204,7 @@ public class CardSharkView extends SurfaceView implements SurfaceHolder.Callback
         private final CardSharkView cardSharkView;
 
         private boolean running = false;
+        private boolean paused = false;
 
         Animation(SurfaceHolder surfaceHolder, CardSharkView cardSharkView)
         {
@@ -198,7 +223,29 @@ public class CardSharkView extends SurfaceView implements SurfaceHolder.Callback
 
         void flagStop()
         {
-            running = false;
+            synchronized(surfaceHolder)
+            {
+                running = false;
+                paused = false;
+                surfaceHolder.notifyAll();
+            }
+        }
+
+        void onPause()
+        {
+            synchronized(surfaceHolder)
+            {
+                paused = true;
+            }
+        }
+
+        void onRestart()
+        {
+            synchronized (surfaceHolder)
+            {
+                paused = false;
+                surfaceHolder.notifyAll();
+            }
         }
 
         long timeNow;
@@ -210,10 +257,9 @@ public class CardSharkView extends SurfaceView implements SurfaceHolder.Callback
         {
             Canvas canvas = null;
 
-            while (running)
+            while(running)
             {
                 timeNow = System.currentTimeMillis();
-
                 timeDelta = timeNow - timePrevFrame;
 
                 if(timeDelta < 16)
@@ -222,7 +268,7 @@ public class CardSharkView extends SurfaceView implements SurfaceHolder.Callback
                     {
                         Thread.sleep(16 - timeDelta);
                     }
-                    catch(InterruptedException e)
+                    catch (InterruptedException e)
                     {
                         System.err.println("Thread Interrupted");
                     }
@@ -234,16 +280,31 @@ public class CardSharkView extends SurfaceView implements SurfaceHolder.Callback
                 {
                     canvas = surfaceHolder.lockCanvas();
 
-                    synchronized (surfaceHolder)
+                    synchronized(surfaceHolder)
                     {
                         cardSharkView.doDraw(canvas);
                     }
                 }
                 finally
                 {
-                    if (null != canvas)
+                    if(null != canvas)
                     {
                         surfaceHolder.unlockCanvasAndPost(canvas);
+                    }
+                }
+
+                synchronized(surfaceHolder)
+                {
+                    while(paused)
+                    {
+                        try
+                        {
+                            surfaceHolder.wait();
+                        }
+                        catch (InterruptedException e)
+                        {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }

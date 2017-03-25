@@ -3,7 +3,7 @@
 // Description: Implement an interface for accessing a standard 52 card
 // deck.
 // Created: Mon Mar 20 10:00:29 2017 (-0500)
-// Last-Updated: Mon Mar 20 11:46:58 2017 (-0500)
+// Last-Updated: Fri Mar 24 23:00:37 2017 (-0500)
 // Author: Ivan Guerra <Ivan.E.Guerra-1@ou.edu>
 // ======================================================================
 package com.mouthofrandom.cardshark.game.blackjack;
@@ -11,48 +11,26 @@ package com.mouthofrandom.cardshark.game.blackjack;
 import java.util.Random;
 
 public class CardDeck {
-    private enum Suit {SPADE, HEART, CLUB, DIAMOND};
-    private enum Value {ACE, TWO, THREE, FOUR, FIVE, SIX,
-                        SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING};
-
+    private final String[] SUITS = new String[]{"SPADES","CLUBS","DIAMONDS","HEARTS"};
+    private final String[] CARD_TYPES = new String[]{"VALUE","KING","QUEEN","JACK","ACE"};
+    private final int[] VALUES = new int[]{2,3,4,5,6,7,8,9,10,11};
     private final int DECK_SIZE = 52;
+    
     private Card[] cards;
     private int activeCardCount;
-    private Suit[] suits;
-    private Value[] values;
-
-    private class Card {
-        private Suit suit;
-        private Value value;
-
-        public Card(Suit suit, Value value) {
-            this.suit = suit;
-            this.value = value;
-        }
-
-        public Suit getSuit() {
-            return suit;
-        }
-
-        public Value getValue() {
-            return value;
-        }
-
-        public String toString() {
-            return ("(" + this.suit + ", " + this.value + ")");
-        }
-    }
 
     public CardDeck() {
         activeCardCount = 0;
         cards = new Card[DECK_SIZE];
-        suits = Suit.values();
-        values = Value.values();
 
-        for (int i = 0 ; i < suits.length; i++){
-            for (int j = 0 ; j < values.length; j++){
-                cards[activeCardCount++] = new Card(suits[i], values[j]);
+        for (int i = 0 ; i < SUITS.length; i++){
+            for (int j = 0 ; j < 9; j++){
+		cards[activeCardCount++] = new Card(SUITS[i], CARD_TYPES[0], VALUES[j]);
             }
+	    cards[activeCardCount++] = new Card(SUITS[i], CARD_TYPES[1], VALUES[8]);
+	    cards[activeCardCount++] = new Card(SUITS[i], CARD_TYPES[2], VALUES[8]);
+	    cards[activeCardCount++] = new Card(SUITS[i], CARD_TYPES[3], VALUES[8]);
+	    cards[activeCardCount++] = new Card(SUITS[i], CARD_TYPES[4], VALUES[9]);
         }
     }
 
@@ -96,28 +74,11 @@ public class CardDeck {
         }
     }
 
-    /* Sort the deck by suit and value. */
-    public void sort() {
-        Card bucketCards[][] = new Card[suits.length][values.length];
-
-        for (int i = 0; i < activeCardCount; i++){
-            bucketCards[cards[i].getSuit().ordinal()][cards[i].getValue().ordinal()]=cards[i];
-        }
-
-        int pointer = 0;
-        for (int i = 0; i < suits.length; i++){
-            for (int j = 0; j < values.length; j++){
-                if (bucketCards[i][j] != null)
-                    cards[pointer++] = bucketCards[i][j];
-            }
-        }
-    }
-
     /* Prints out the card deck. */
     public void printStack() {
         int cardPointer = 0;
-        for (int i = 0; i < suits.length; i++){
-            for (int j = 0; j < values.length; j++){
+        for (int i = 0; i < SUITS.length; i++){
+            for (int j = 0; j < VALUES.length; j++){
                 System.out.print(cards[cardPointer++] + " ");
             }
             System.out.println("\n");
@@ -130,7 +91,7 @@ public class CardDeck {
 
         for (int i = 0; i < activeCardCount; i++){
             sb.append(cards[i]);
-            sb.append(" ");
+            sb.append("\n");
         }
         return sb.toString();
     }

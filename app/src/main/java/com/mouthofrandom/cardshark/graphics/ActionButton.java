@@ -20,7 +20,9 @@ public class ActionButton implements Observer
     private static final int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
     private static final int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
 
-    public static final int buttonDiameter = screenHeight / 16;
+    private static final int buttonX = (int)(screenWidth - (.1 * screenHeight));
+    private static final int buttonY = (int)(screenHeight - (.1 * screenHeight));
+    private static final int buttonDiameter = screenHeight / 16;
 
     private static final int FRAMES = 30;
 
@@ -121,17 +123,14 @@ public class ActionButton implements Observer
         if(isRunning)
         {
             Paint p = new Paint();
+            p.setColor(Color.RED);
 
-            if (imageOn)
-            {
-                p.setColor(Color.BLUE);
-            }
-            else
-            {
-                p.setColor(Color.BLACK);
-            }
-
-            canvas.drawCircle((int)(.7 * screenWidth), (int)(.7 * screenHeight), (screenHeight/16), p);
+            canvas.drawCircle(buttonX, buttonY, buttonDiameter, p);
         }
+    }
+
+    public static boolean isInButton(float x, float y)
+    {
+        return (x > (buttonX * .9) && y > (buttonY * .9));
     }
 }

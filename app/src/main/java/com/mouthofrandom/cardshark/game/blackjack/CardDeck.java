@@ -3,7 +3,7 @@
 // Description: Implement an interface for accessing a standard 52 card
 // deck.
 // Created: Mon Mar 20 10:00:29 2017 (-0500)
-// Last-Updated: Fri Mar 24 23:00:37 2017 (-0500)
+// Last-Updated: Sat Mar 25 11:28:45 2017 (-0500)
 // Author: Ivan Guerra <Ivan.E.Guerra-1@ou.edu>
 // ======================================================================
 package com.mouthofrandom.cardshark.game.blackjack;
@@ -15,7 +15,7 @@ public class CardDeck {
     private final String[] CARD_TYPES = new String[]{"VALUE","KING","QUEEN","JACK","ACE"};
     private final int[] VALUES = new int[]{2,3,4,5,6,7,8,9,10,11};
     private final int DECK_SIZE = 52;
-    
+
     private Card[] cards;
     private int activeCardCount;
 
@@ -25,12 +25,12 @@ public class CardDeck {
 
         for (int i = 0 ; i < SUITS.length; i++){
             for (int j = 0 ; j < 9; j++){
-		cards[activeCardCount++] = new Card(SUITS[i], CARD_TYPES[0], VALUES[j]);
+                cards[activeCardCount++] = new Card(SUITS[i], CARD_TYPES[0], VALUES[j]);
             }
-	    cards[activeCardCount++] = new Card(SUITS[i], CARD_TYPES[1], VALUES[8]);
-	    cards[activeCardCount++] = new Card(SUITS[i], CARD_TYPES[2], VALUES[8]);
-	    cards[activeCardCount++] = new Card(SUITS[i], CARD_TYPES[3], VALUES[8]);
-	    cards[activeCardCount++] = new Card(SUITS[i], CARD_TYPES[4], VALUES[9]);
+            cards[activeCardCount++] = new Card(SUITS[i], CARD_TYPES[1], VALUES[8]);
+            cards[activeCardCount++] = new Card(SUITS[i], CARD_TYPES[2], VALUES[8]);
+            cards[activeCardCount++] = new Card(SUITS[i], CARD_TYPES[3], VALUES[8]);
+            cards[activeCardCount++] = new Card(SUITS[i], CARD_TYPES[4], VALUES[9]);
         }
     }
 
@@ -46,9 +46,9 @@ public class CardDeck {
 
     /* Return a Card object from the top of the deck. */
     public Card deal() {
-	if (activeCardCount <= 0) {
-	    System.out.println("ERROR: EMPTY DECK");
-	}
+        if (activeCardCount <= 0) {
+            System.out.println("ERROR: EMPTY DECK");
+        }
         return cards[--activeCardCount];
     }
 

@@ -2,7 +2,7 @@
 // Filename: BlackJack.java
 // Description: Define and implement a simplified blackjack simulator.
 // Created: Fri Mar 24 22:20:34 2017 (-0500)
-// Last-Updated: Fri Mar 24 23:13:06 2017 (-0500)
+// Last-Updated: Fri Mar 24 23:31:06 2017 (-0500)
 // Author: Ivan Guerra <Ivan.E.Guerra-1@ou.edu>
 // ======================================================================
 package com.mouthofrandom.cardshark.game.blackjack;
@@ -59,6 +59,14 @@ public class BlackJack {
 	    machineHand.draw(deck.deal());
 	}
     }
+
+    /* 
+     * Return two times the bet amount if the 
+     * player wins otherwise return the negative of this value indicating a loss. 
+     */
+    private int payout() {
+	return (playerWon()) ? 2 * bet : -2 * bet;
+    }
     
     public BlackJack() {
 	this.deck = new CardDeck();
@@ -97,13 +105,5 @@ public class BlackJack {
     public int stand() {
 	machineAction();
 	return payout();
-    }
-
-    /* 
-     * Return two times the bet amount if the 
-     * player wins otherwise return the negative of this value indicating a loss. 
-     */
-    public int payout() {
-	return (playerWon()) ? 2 * bet : -2 * bet;
     }
 }

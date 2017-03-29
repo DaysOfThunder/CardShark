@@ -2,20 +2,17 @@ package com.mouthofrandom.cardshark.activities;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
+import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Layout;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.mouthofrandom.cardshark.R;
-import com.mouthofrandom.cardshark.graphics.utility.CustomAnimationDrawable;
 
 /**
  * Created by Elliot
@@ -25,7 +22,7 @@ import com.mouthofrandom.cardshark.graphics.utility.CustomAnimationDrawable;
 
 public class TitleScreenActivity extends AppCompatActivity{
 
-    AnimationDrawable titleAnimation;
+    AnimationDrawable backgroundAnimation;
     Button startButton;
     Intent casino_activity;
 
@@ -44,17 +41,11 @@ public class TitleScreenActivity extends AppCompatActivity{
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);   //set fullscreen
 
+        //set up titleAnimation and backgroundanimation
+        backgroundAnimation = (AnimationDrawable) findViewById(R.id.backdrop).getBackground();
 
-        CustomAnimationDrawable buttonAnimation = new CustomAnimationDrawable() {
-
-            @Override
-            onAnimationFinish(){
-
-            }
-
-        };
         //start the animation
-        titleAnimation.start();
+        backgroundAnimation.start();
 
         //set up activity to switch to
         casino_activity = new Intent(this, CasinoActivity.class);
@@ -63,7 +54,7 @@ public class TitleScreenActivity extends AppCompatActivity{
         startButton = (Button) findViewById(R.id.start_button);
 
         //set up the button's background to be animated
-        final AnimationDrawable buttonAnimation = (CustomAnimationDrawable) startButton.getBackground();
+        final AnimationDrawable buttonAnimation = (AnimationDrawable)startButton.getBackground();
 
         //prepare listener
         startButton.setOnClickListener(new View.OnClickListener() {
@@ -71,6 +62,16 @@ public class TitleScreenActivity extends AppCompatActivity{
             public void onClick(View v) {
 
                 buttonAnimation.start();
+
+                new CountDownTimer(1500, 1000) {
+                    public void onFinish() {
+                        startActivity(casino_activity);
+                    }
+
+                    public void onTick(long millisUntilFinished) {
+                        // millisUntilFinished    The amount of time until finished.
+                    }
+                }.start();
 
             }
         });
@@ -95,3 +96,4 @@ public class TitleScreenActivity extends AppCompatActivity{
 
     }
 }
+

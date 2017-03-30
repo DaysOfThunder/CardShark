@@ -15,6 +15,7 @@ import com.mouthofrandom.cardshark.game.roulette.RouletteTable;
 
 public class RouletteBoardActivity extends AppCompatActivity {
 
+    public static final String RESULT_MESSAGE = "RouletteBoardActivity.WHEEL_RESULT_MESSAGE";
     private int betAmount = 0;//How much we want to bet on a tile.
     RouletteTable table;//Backend.
     private Map<String, Button> buttons;//Betting tile buttons and associated ids.
@@ -33,6 +34,12 @@ public class RouletteBoardActivity extends AppCompatActivity {
         setupBetTiles();
         setupQuit();
         setupSpin();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        resetAllBetTiles();
     }
 
     /**
@@ -173,15 +180,20 @@ public class RouletteBoardActivity extends AppCompatActivity {
         spinButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                System.out.println("Result generating");
                 int result = table.play();
                 System.out.println("Spin Result:" + result);
-
-                //TODO: Spin the roulette wheel.
 
                 int payout = table.payout();
                 System.out.println("Payout:" + payout);
 
                 //TODO: Add the payout money, deduct the loss.
+
+                //Spin the roulette wheel:
+                final Intent intent = new Intent(RouletteBoardActivity.this, RouletteWheelActivity.class);
+                Button spinButton = (Button) findViewById(R.id.Spin);
+                intent.putExtra(RESULT_MESSAGE, result);
+                startActivity(intent);
 
                 //Reset board:
                 resetAllBetTiles();

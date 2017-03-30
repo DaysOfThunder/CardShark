@@ -27,6 +27,7 @@ public class CardSharkView extends SurfaceView implements SurfaceHolder.Callback
         elements = new ArrayList<>();
 
         Collections.addAll(elements, drawables);
+        Collections.addAll(elements, drawables);
 
         getHolder().addCallback(this);
 

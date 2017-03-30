@@ -3,6 +3,7 @@ package com.mouthofrandom.cardshark.activities;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.AnimationDrawable;
+import android.media.MediaPlayer;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -56,6 +57,11 @@ public class TitleScreenActivity extends AppCompatActivity{
         //set up the button's background to be animated
         final AnimationDrawable buttonAnimation = (AnimationDrawable)startButton.getBackground();
 
+        //Set up Music:
+        final MediaPlayer player = MediaPlayer.create(this, R.raw.cardshark_menu_screen);
+        player.setLooping(true);
+        player.start();
+
         //prepare listener
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,6 +71,7 @@ public class TitleScreenActivity extends AppCompatActivity{
 
                 new CountDownTimer(1500, 1000) {
                     public void onFinish() {
+                        player.stop();
                         startActivity(casino_activity);
                     }
 

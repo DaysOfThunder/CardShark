@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         class="com.mouthofrandom.cardshark.activities.RouletteWheelView"
-        android:id="@+id/view" />
+        android:id="@+id/RouletteWheelSurfaceView" />
 
     <Button
         android:text="Ok"

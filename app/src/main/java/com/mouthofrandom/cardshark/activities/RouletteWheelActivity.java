@@ -39,10 +39,13 @@ public class RouletteWheelActivity extends AppCompatActivity
 
         //Setup return:
         Button returnButton = (Button) findViewById(R.id.RouletteReturnButton);
+        final RouletteWheelView sv = (RouletteWheelView) findViewById(R.id.RouletteWheelSurfaceView);
         returnButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                finish();
+                if(!sv.getRunning()) {
+                    finish();
+                }
             }
         });
     }
@@ -54,6 +57,7 @@ class RouletteWheelView extends SurfaceView implements SurfaceHolder.Callback
     private static int MAX_TICKS_PER_LOC = 7;//Minimum number of ticks to spin between two locations on the wheel.
     private static int[] NUM_ORDER = {0,8,15,2,17,12,1,6,11,4,3,10,7,16,9,18,5,14,13};//Location of number on wheel (ccw from 0).
 
+    private boolean running = false;
     private int currentLocation = 0;//Where the wheel is at.
     private int endLocation;
     private int ticksToNextLoc = 1;
@@ -106,6 +110,16 @@ class RouletteWheelView extends SurfaceView implements SurfaceHolder.Callback
         return currentLocation == endLocation;//End
     }
 
+    public void setRunning(boolean t)
+    {
+        running = t;
+    }
+
+    public boolean getRunning()
+    {
+        return running;
+    }
+
     protected void doDraw(Canvas canvas)
     {
         Paint paint = new Paint();
@@ -148,6 +162,7 @@ class RouletteWheelView extends SurfaceView implements SurfaceHolder.Callback
             super.start();
 
             running = true;
+            rouletteWheelView.setRunning(true);
         }
 
         void flagStop()
@@ -155,6 +170,7 @@ class RouletteWheelView extends SurfaceView implements SurfaceHolder.Callback
             synchronized(surfaceHolder)
             {
                 running = false;
+                rouletteWheelView.setRunning(false);
                 paused = false;
                 surfaceHolder.notifyAll();
             }
@@ -238,6 +254,7 @@ class RouletteWheelView extends SurfaceView implements SurfaceHolder.Callback
                 }
             }
             running = false;
+            rouletteWheelView.setRunning(false);
         }
     }
 }

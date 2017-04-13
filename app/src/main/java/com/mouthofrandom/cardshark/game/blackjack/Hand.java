@@ -2,12 +2,13 @@
 // Filename: Hand.java
 // Description: Define and implement a blackjack player hand.
 // Created: Fri Mar 24 22:16:20 2017 (-0500)
-// Last-Updated: Sat Mar 25 11:29:00 2017 (-0500)
+// Last-Updated: Wed Apr 12 20:39:49 2017 (-0500)
 // Author: Ivan Guerra <Ivan.E.Guerra-1@ou.edu>
 // ======================================================================
 package com.mouthofrandom.cardshark.game.blackjack;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Hand {
     /* Cards held by the player. */
@@ -46,5 +47,32 @@ public class Hand {
     public void clearHand() {
         cards.clear();
         totalValue = 0;
+    }
+
+    /* 
+     * Compare two card hands. 
+     * Return 1 if h1 > h2, 0 if h1 == h2, and -1 otherwise. 
+     */
+    public int compare(final Hand h1, final Hand h2) {
+	int h1Sum = 0;
+	int h2Sum = 0;
+
+	for (Card c : h1.getCards()) {
+	    h1Sum += c.getValue();
+	}
+	
+	for (Card c : h2.getCards()) {
+	    h2Sum += c.getValue();
+	}
+
+	if (h1Sum == h2Sum) {
+	    return 0;
+	}
+	return (h1Sum > h2Sum) ? 1 : -1;
+    }
+
+    /* Wrapper method allowing objects of the Hand class to compare themselves directly to other Hand objects. */
+    public int compareHand(final Hand rhs) {
+	return compare(this, rhs);
     }
 }

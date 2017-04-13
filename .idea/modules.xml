@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CardShark.iml" filepath="$PROJECT_DIR$/CardShark.iml" />
-      <module fileurl="file://$PROJECT_DIR$/CardSharkRouletteBranch.iml" filepath="$PROJECT_DIR$/CardSharkRouletteBranch.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

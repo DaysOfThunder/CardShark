@@ -3,6 +3,8 @@
     package="com.mouthofrandom.cardshark">
 
     <application
+        android:hardwareAccelerated="false"
+        android:largeHeap="true"
         android:allowBackup="true"
         android:icon="@mipmap/trainer"
         android:label="@string/app_name"

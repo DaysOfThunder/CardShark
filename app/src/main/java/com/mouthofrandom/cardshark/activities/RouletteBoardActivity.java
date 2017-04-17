@@ -156,8 +156,20 @@ public class RouletteBoardActivity extends AppCompatActivity {
     /**
      * Returns to previous activity.
      */
-    private void setupQuit(){
-        //TODO
+    private void setupQuit()
+    {
+        final Intent intent = new Intent(RouletteBoardActivity.this, CasinoActivity.class);
+        Button quitButton = (Button) findViewById(R.id.Quit);
+
+        quitButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                startActivity(intent);
+            }
+        });
+
     }
 
     /**

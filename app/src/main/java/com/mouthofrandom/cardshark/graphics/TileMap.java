@@ -119,7 +119,7 @@ public class TileMap implements Observer, Subject
         {
             for(int j = 0; j < height; j++)
             {
-                Tile tile = tiles.get(map[j][i]);
+                Tile tile = tiles.get(map[i][j]);
                 canvas.drawBitmap(tile.getBitmap(),
                         (i * DIMENSIONS) + walk_offset_x + offset_x - (position_x * DIMENSIONS),
                         (j * DIMENSIONS) + walk_offset_y + offset_y - (position_y * DIMENSIONS),

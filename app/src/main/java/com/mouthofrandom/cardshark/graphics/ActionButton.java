@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.widget.Toast;
 
 import com.mouthofrandom.cardshark.activities.RouletteBoardActivity;
 import com.mouthofrandom.cardshark.graphics.utility.Observer;
@@ -74,6 +75,9 @@ public class ActionButton implements Observer
                     case ROULETTE:
                         context.startActivity(new Intent(context, RouletteBoardActivity.class));
                         break;
+                    case BLACKJACK:
+                        Toast blackjackToast = Toast.makeText(context, "Starting Blackjack Activity", Toast.LENGTH_SHORT);
+                        blackjackToast.show();
                 }
             }
         }

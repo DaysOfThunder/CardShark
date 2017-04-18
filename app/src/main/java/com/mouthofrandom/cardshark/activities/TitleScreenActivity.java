@@ -60,6 +60,8 @@ public class TitleScreenActivity extends AppCompatActivity{
         //Set up Music:
         final MediaPlayer player = MediaPlayer.create(this, R.raw.cardshark_menu_screen);
         player.setLooping(true);
+        float vol = (float).75;
+        player.setVolume(vol,vol);
         player.start();
 
         //prepare listener

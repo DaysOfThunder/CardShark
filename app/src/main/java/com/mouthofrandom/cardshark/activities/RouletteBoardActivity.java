@@ -2,6 +2,7 @@ package com.mouthofrandom.cardshark.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -21,7 +22,8 @@ public class RouletteBoardActivity extends AppCompatActivity {
     private Map<String, Button> buttons;//Betting tile buttons and associated ids.
     private Map<String, String> buttonText;//Display names of betting tiles.
     private Map<String, Integer> buttonTextColor;//Text colors of betting tiles.
-    private Map<String, Integer> buttonColors;//Background display colors of betting tiles.
+    private Map<String, Integer> buttonBGColors;//Background display colors of betting tiles.
+    private MediaPlayer player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +36,32 @@ public class RouletteBoardActivity extends AppCompatActivity {
         setupBetTiles();
         setupQuit();
         setupSpin();
+
+        //Set up Music:
+        player = MediaPlayer.create(this, R.raw.cardshark_roulette);
+        player.setLooping(true);
+        float vol = (float).75;
+        player.setVolume(vol,vol);
+        player.start();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        //player.start();
         resetAllBetTiles();
+    }
+
+    @Override
+    protected void onPause() {
+        //player.pause();
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        player.stop();
+        super.onDestroy();
     }
 
     /**
@@ -50,7 +72,7 @@ public class RouletteBoardActivity extends AppCompatActivity {
         buttons = new HashMap<String, Button>();
         buttonText = new HashMap<String, String>();
         buttonTextColor = new HashMap<String, Integer>();
-        buttonColors = new HashMap<String, Integer>();
+        buttonBGColors = new HashMap<String, Integer>();
         table = new RouletteTable();
     }
 
@@ -90,18 +112,18 @@ public class RouletteBoardActivity extends AppCompatActivity {
             b.setText(id);
             buttonText.put(id,id);
             if(i == 0){
-                b.setBackgroundColor(Color.GREEN);
-                buttonColors.put(id,Color.GREEN);
+                //b.setBackgroundColor(Color.GREEN);
+                //buttonBGColors.put(id,Color.GREEN);
                 b.setTextColor(Color.BLACK);
                 buttonTextColor.put(id,Color.BLACK);
             } else if(0 == i%2) {
-                b.setBackgroundColor(Color.BLACK);
-                buttonColors.put(id,Color.BLACK);
+                //b.setBackgroundColor(Color.BLACK);
+                //buttonBGColors.put(id,Color.BLACK);
                 b.setTextColor(Color.WHITE);
                 buttonTextColor.put(id,Color.WHITE);
             } else {
-                b.setBackgroundColor(Color.RED);
-                buttonColors.put(id,Color.RED);
+                //b.setBackgroundColor(Color.RED);
+                //buttonBGColors.put(id,Color.RED);
                 b.setTextColor(Color.BLACK);
                 buttonTextColor.put(id,Color.BLACK);
             }
@@ -126,8 +148,8 @@ public class RouletteBoardActivity extends AppCompatActivity {
             b.setOnClickListener(new BetClickListener(id,b));
             b.setText(id);
             buttonText.put(id,id);
-            buttonColors.put(id,colors[i]);
-            b.setBackgroundColor(colors[i]);
+            //buttonBGColors.put(id,colors[i]);
+            //b.setBackgroundColor(colors[i]);
             buttonTextColor.put(id,textColors[i]);
             b.setTextColor(textColors[i]);
         }
@@ -158,7 +180,7 @@ public class RouletteBoardActivity extends AppCompatActivity {
      */
     private void setupQuit()
     {
-        final Intent intent = new Intent(RouletteBoardActivity.this, CasinoActivity.class);
+        //final Intent intent = new Intent(RouletteBoardActivity.this, CasinoActivity.class);
         Button quitButton = (Button) findViewById(R.id.Quit);
 
         quitButton.setOnClickListener(new View.OnClickListener()
@@ -166,7 +188,8 @@ public class RouletteBoardActivity extends AppCompatActivity {
             @Override
             public void onClick(View view)
             {
-                startActivity(intent);
+                //startActivity(intent);
+                finish();
             }
         });
 
@@ -225,8 +248,8 @@ public class RouletteBoardActivity extends AppCompatActivity {
             } else {
                 table.addSingleBet(id,betAmount);
                 button.setText("$" + String.valueOf(table.getTileBetAmount(id)));
-                button.setBackgroundColor(Color.WHITE);
-                button.setTextColor(Color.BLACK);
+                //button.setBackgroundColor(Color.WHITE);
+                //button.setTextColor(Color.BLACK);
             }
         }
     }
@@ -267,7 +290,7 @@ public class RouletteBoardActivity extends AppCompatActivity {
      */
     private void resetBetTile(Button button, String id)
     {
-        button.setBackgroundColor(buttonColors.get(id));
+        //button.setBackgroundColor(buttonBGColors.get(id));
         button.setTextColor(buttonTextColor.get(id));
         button.setText(buttonText.get(id));
     }

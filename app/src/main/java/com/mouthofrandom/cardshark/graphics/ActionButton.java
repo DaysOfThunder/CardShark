@@ -76,9 +76,8 @@ public class ActionButton implements Observer
                         context.startActivity(new Intent(context, RouletteBoardActivity.class));
                         break;
                     case BLACKJACK:
-                        Toast blackjackPlaceholder = Toast.makeText(context, "Starting Blackjack Activity", Toast.LENGTH_SHORT);
-                        blackjackPlaceholder.show();
-                        break;
+                        Toast blackjackToast = Toast.makeText(context, "Starting Blackjack Activity", Toast.LENGTH_SHORT);
+                        blackjackToast.show();
                 }
             }
         }

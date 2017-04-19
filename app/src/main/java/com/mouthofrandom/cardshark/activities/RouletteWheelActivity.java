@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
@@ -63,14 +64,20 @@ class RouletteWheelView extends SurfaceView implements SurfaceHolder.Callback
     private int ticksToNextLoc = 1;
     private int currentTicksPerLocChange = 1;//Speed of wheel in ticks per change between locations.
     private Bitmap wheel;
+    private Bitmap arrow;
     private SurfaceHolder surfaceHolder;
+    private MediaPlayer player;
 
     public RouletteWheelView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
         //Setup:
         wheel = BitmapFactory.decodeResource(getResources(),R.drawable.rouletteboard);
+        arrow = BitmapFactory.decodeResource(getResources(),R.drawable.roulette_arrow);
         endLocation = NUM_ORDER[RouletteWheelActivity.result] + ROT_MIN_SPIN*NUM_ORDER.length;//Spin several times and then go to result location.
+
+        //Set up Music:
+        player = MediaPlayer.create(context, R.raw.tick);
 
         getHolder().addCallback(this);
         setFocusable(true);
@@ -122,6 +129,7 @@ class RouletteWheelView extends SurfaceView implements SurfaceHolder.Callback
 
     protected void doDraw(Canvas canvas)
     {
+        //Paint wheel:
         Paint paint = new Paint();
         paint.setColor(0xff016B3A);
         canvas.drawRect(0,0,canvas.getWidth(),canvas.getHeight(),paint);
@@ -135,9 +143,14 @@ class RouletteWheelView extends SurfaceView implements SurfaceHolder.Callback
         Bitmap scaleWheel = Bitmap.createBitmap(wheel,0,0,wheel.getWidth(),wheel.getHeight(),scaleMatrix,true);
         rotatematrix.postRotate(degrees,width/2,width/2);
         canvas.drawBitmap(scaleWheel,rotatematrix,null);
-        Paint linePaint = new Paint();
-        linePaint.setColor(Color.YELLOW);
-        canvas.drawRect(width/2+150,width/2-10,width-25,width/2+10,linePaint);
+
+        //Paint Arrow:
+        Matrix arrowScaleMatrix = new Matrix();
+        int arrowWidth = arrow.getWidth();
+        int arrowHeight = arrow.getHeight();
+        arrowScaleMatrix.postScale((float)0.25*(float)width/arrowWidth,(float)0.1*(float)width/arrowWidth);
+        Bitmap scaleArrow = Bitmap.createBitmap(arrow,0,0,arrow.getWidth(),arrow.getHeight(),arrowScaleMatrix,true);
+        canvas.drawBitmap(scaleArrow,(int)(width*0.8),(int)(width*0.475),null);
     }
 
     private class Animation extends Thread
@@ -167,6 +180,7 @@ class RouletteWheelView extends SurfaceView implements SurfaceHolder.Callback
 
         void flagStop()
         {
+            player.stop();
             synchronized(surfaceHolder)
             {
                 running = false;
@@ -178,6 +192,7 @@ class RouletteWheelView extends SurfaceView implements SurfaceHolder.Callback
 
         void onPause()
         {
+            player.stop();
             synchronized(surfaceHolder)
             {
                 paused = true;
@@ -235,6 +250,10 @@ class RouletteWheelView extends SurfaceView implements SurfaceHolder.Callback
                     if(null != canvas)
                     {
                         surfaceHolder.unlockCanvasAndPost(canvas);
+                    }
+                    if(ticksToNextLoc == currentTicksPerLocChange)
+                    {
+                        player.start();
                     }
                 }
 

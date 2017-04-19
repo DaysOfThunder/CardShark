@@ -18,7 +18,7 @@ public interface Subject
 
     enum ActionEvent implements Event
     {
-        NONE, ROULETTE;
+        NONE, ROULETTE, BLACKJACK;
 
         public static ActionEvent match(String string)
         {

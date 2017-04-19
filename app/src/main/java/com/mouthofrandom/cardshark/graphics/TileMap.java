@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.util.Log;
 
 import com.mouthofrandom.cardshark.graphics.utility.Observer;
 import com.mouthofrandom.cardshark.graphics.utility.Subject;
@@ -20,6 +21,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.mouthofrandom.cardshark.graphics.TileMap.Direction.*;
@@ -30,8 +32,8 @@ public class TileMap implements Observer, Subject
     private static final int FRAMES = 32;
     private static final int offset_x = (-DIMENSIONS/2) + (Resources.getSystem().getDisplayMetrics().widthPixels/2);
     private static final int offset_y = (-DIMENSIONS/2) + (DIMENSIONS/3) + (Resources.getSystem().getDisplayMetrics().heightPixels/2);
-
-    private List<Tile> tiles;
+    private HashMap<Integer, Tile> tiles = new HashMap<Integer, Tile>();
+    //private List<Tile> tiles;
     private int[][] map;
 
     private int width;
@@ -56,15 +58,20 @@ public class TileMap implements Observer, Subject
 
         AssetManager assetManager = context.getAssets();
 
-        String prefix = "tiles";
+        String prefix = "tilex";
 
-        tiles = new ArrayList<>();
+        //tiles = new ArrayList<>();
+
 
         try
         {
-            for(String path : assetManager.list(prefix))
+            String[] tilefiles = assetManager.list(prefix);
+            for(String path : tilefiles)
             {
-                tiles.add(new Tile(assetManager.open(prefix + "/" + path), path.contains("walk"), ActionEvent.match(path)));
+
+                tiles.put(Integer.parseInt(path.substring(0,3)), new Tile(assetManager.open(prefix + "/" + path), path.contains("walk"), ActionEvent.match(path)));
+
+
             }
         }
         catch (IOException e)
@@ -144,6 +151,7 @@ public class TileMap implements Observer, Subject
 
         switch(current)
         {
+
             case UP:
                 isWalkable = tiles.get(map[position_x][position_y - 1]).isWalkable();
                 facing_x = position_x;

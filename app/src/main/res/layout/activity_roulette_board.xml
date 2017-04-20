@@ -31,24 +31,11 @@
                 android:layout_height="match_parent"
                 tools:context="com.mouthofrandom.cardshark.fragments.CurrencyBar">
 
-                <android.support.v7.widget.Toolbar
+                <fragment
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/background_dark"
-                    android:theme="?attr/actionBarTheme"
-                    android:minHeight="?attr/actionBarSize"
-                    android:id="@+id/toolbar" />
-
-                <TextView
-                    android:text="Hello World"
-                    android:layout_width="match_parent"
-                    android:layout_height="57dp"
-                    android:id="@+id/statustext"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textAlignment="center"
-                    android:textColor="@android:color/background_light"
-                    android:textSize="36sp"
-                    android:fontFamily="monospace" />
+                    android:layout_height="match_parent"
+                    android:name="com.mouthofrandom.cardshark.fragments.CurrencyBar"
+                    android:id="@+id/fragment2" />
 
             </FrameLayout>
         </LinearLayout>

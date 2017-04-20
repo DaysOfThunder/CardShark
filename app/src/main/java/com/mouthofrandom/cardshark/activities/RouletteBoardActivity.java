@@ -8,13 +8,18 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.mouthofrandom.cardshark.R;
+import com.mouthofrandom.cardshark.fragments.CurrencyBar;
 import com.mouthofrandom.cardshark.game.roulette.RouletteTable;
+import com.mouthofrandom.cardshark.graphics.utility.Informer;
+import com.mouthofrandom.cardshark.graphics.utility.Listener;
 
-public class RouletteBoardActivity extends AppCompatActivity {
+public class RouletteBoardActivity extends AppCompatActivity implements Informer
+{
 
     public static final String RESULT_MESSAGE = "RouletteBoardActivity.WHEEL_RESULT_MESSAGE";
     private int betAmount = 0;//How much we want to bet on a tile.
@@ -22,6 +27,8 @@ public class RouletteBoardActivity extends AppCompatActivity {
     private Map<String, Button> buttons;//Betting tile buttons and associated ids.
     private Map<String, String> buttonText;//Display names of betting tiles.
     private Map<String, Integer> buttonTextColor;//Text colors of betting tiles.
+    private Map<String, Integer> buttonColors;//Background display colors of betting tiles.
+    private Collection<Listener> listeners;
     private Map<String, Integer> buttonBGColors;//Background display colors of betting tiles.
     private MediaPlayer player;
 
@@ -50,6 +57,8 @@ public class RouletteBoardActivity extends AppCompatActivity {
         super.onResume();
         //player.start();
         resetAllBetTiles();
+
+        this.listeners.add(CurrencyBar.CURRENCY_BAR);
     }
 
     @Override
@@ -72,6 +81,8 @@ public class RouletteBoardActivity extends AppCompatActivity {
         buttons = new HashMap<String, Button>();
         buttonText = new HashMap<String, String>();
         buttonTextColor = new HashMap<String, Integer>();
+        buttonColors = new HashMap<String, Integer>();
+        listeners = new ArrayList<>();
         buttonBGColors = new HashMap<String, Integer>();
         table = new RouletteTable();
     }
@@ -210,7 +221,11 @@ public class RouletteBoardActivity extends AppCompatActivity {
                 int payout = table.payout();
                 System.out.println("Payout:" + payout);
 
-                //TODO: Add the payout money, deduct the loss.
+                MoneyEvent event = new MoneyEvent();
+
+                event.amount = payout;
+
+                RouletteBoardActivity.this.notify(event);
 
                 //Spin the roulette wheel:
                 final Intent intent = new Intent(RouletteBoardActivity.this, RouletteWheelActivity.class);
@@ -222,6 +237,21 @@ public class RouletteBoardActivity extends AppCompatActivity {
                 resetAllBetTiles();
             }
         });
+    }
+
+    @Override
+    public void notify(Informer.Event event)
+    {
+        for(Listener listener : listeners)
+        {
+            listener.update(event);
+        }
+    }
+
+    @Override
+    public void addListener(Listener listener)
+    {
+        this.listeners.add(listener);
     }
 
     /**
@@ -239,18 +269,28 @@ public class RouletteBoardActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onClick(View v) {
-            //TODO: decrease money.
-            if(betAmount == 0) {
+        public void onClick(View v)
+        {
+            MoneyEvent event = new MoneyEvent();
+
+            event.amount = betAmount * -1;
+
+            if(betAmount == 0)
+            {
+                event.amount = table.getTileBetAmount(id);
+
                 table.placeSingleBet(id,0);//Reset bet.
                 resetBetTile(button,id);
-                //TODO: return money.
-            } else {
+            }
+            else
+            {
                 table.addSingleBet(id,betAmount);
                 button.setText("$" + String.valueOf(table.getTileBetAmount(id)));
                 //button.setBackgroundColor(Color.WHITE);
                 //button.setTextColor(Color.BLACK);
             }
+
+            RouletteBoardActivity.this.notify(event);
         }
     }
 

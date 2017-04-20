@@ -6,7 +6,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.util.Log;
 
 import com.mouthofrandom.cardshark.graphics.utility.Observer;
 import com.mouthofrandom.cardshark.graphics.utility.Subject;
@@ -24,7 +23,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.mouthofrandom.cardshark.graphics.TileMap.Direction.*;
+import static com.mouthofrandom.cardshark.graphics.TileMap.Direction.DOWN;
+import static com.mouthofrandom.cardshark.graphics.TileMap.Direction.LEFT;
+import static com.mouthofrandom.cardshark.graphics.TileMap.Direction.RIGHT;
+import static com.mouthofrandom.cardshark.graphics.TileMap.Direction.UP;
 
 public class TileMap implements Observer, Subject
 {
@@ -58,7 +60,7 @@ public class TileMap implements Observer, Subject
 
         AssetManager assetManager = context.getAssets();
 
-        String prefix = "tilex";
+        String prefix = "tilez";
 
         //tiles = new ArrayList<>();
 

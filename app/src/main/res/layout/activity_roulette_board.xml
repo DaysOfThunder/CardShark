@@ -9,21 +9,42 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.mouthofrandom.cardshark.activities.RouletteBoardActivity"
-    android:background="#ff016B3A">
+    android:background="@drawable/blueishroulettebackground">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:weightSum="1"
+        android:weightSum="10"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true">
 
         <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="com.mouthofrandom.cardshark.fragments.CurrencyBar">
+
+                <fragment
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:name="com.mouthofrandom.cardshark.fragments.CurrencyBar"
+                    android:id="@+id/fragment2" />
+
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="409dp"
-            android:layout_weight="0.98">
+            android:layout_height="0dp"
+            android:layout_weight="8">
 
             <TableLayout
                 android:layout_width="275dp"
@@ -32,213 +53,274 @@
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:layout_weight="1">
 
                     <Button
                         android:text="Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/Bet1" />
+                        android:id="@+id/Bet1"
+                        android:background="@drawable/redroulettebutton"
+                        android:layout_weight="1" />
 
                     <Button
                         android:text="Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/Bet2" />
+                        android:id="@+id/Bet2"
+                        android:background="@drawable/blackroulettebutton"
+                        android:layout_weight="1" />
 
                     <Button
                         android:text="Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/Bet3" />
+                        android:id="@+id/Bet3"
+                        android:background="@drawable/redroulettebutton"
+                        android:layout_weight="1" />
                 </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:layout_weight="1">
 
                     <Button
                         android:text="Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/Bet4" />
+                        android:id="@+id/Bet4"
+                        android:background="@drawable/blackroulettebutton"
+                        android:layout_weight="1" />
 
                     <Button
                         android:text="Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/Bet5" />
+                        android:id="@+id/Bet5"
+                        android:background="@drawable/redroulettebutton"
+                        android:layout_weight="1" />
 
                     <Button
                         android:text="Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/Bet6" />
+                        android:id="@+id/Bet6"
+                        android:background="@drawable/blackroulettebutton"
+                        android:layout_weight="1" />
                 </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:layout_weight="1">
 
                     <Button
                         android:text="Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/Bet7" />
+                        android:id="@+id/Bet7"
+                        android:background="@drawable/redroulettebutton"
+                        android:layout_weight="1" />
 
                     <Button
                         android:text="Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/Bet8" />
+                        android:id="@+id/Bet8"
+                        android:background="@drawable/blackroulettebutton"
+                        android:layout_weight="1" />
 
                     <Button
                         android:text="Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/Bet9" />
+                        android:id="@+id/Bet9"
+                        android:background="@drawable/redroulettebutton"
+                        android:layout_weight="1" />
                 </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:layout_weight="1">
 
                     <Button
                         android:text="Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/Bet10" />
+                        android:id="@+id/Bet10"
+                        android:background="@drawable/blackroulettebutton"
+                        android:layout_weight="1" />
 
                     <Button
                         android:text="Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/Bet11" />
+                        android:id="@+id/Bet11"
+                        android:background="@drawable/redroulettebutton"
+                        android:layout_weight="1" />
 
                     <Button
                         android:text="Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/Bet12" />
+                        android:id="@+id/Bet12"
+                        android:background="@drawable/blackroulettebutton"
+                        android:layout_weight="1" />
                 </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:layout_weight="1">
 
                     <Button
                         android:text="Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/Bet13" />
+                        android:id="@+id/Bet13"
+                        android:background="@drawable/redroulettebutton"
+                        android:layout_weight="1" />
 
                     <Button
                         android:text="Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/Bet14" />
+                        android:id="@+id/Bet14"
+                        android:background="@drawable/blackroulettebutton"
+                        android:layout_weight="1" />
 
                     <Button
                         android:text="Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/Bet15" />
+                        android:id="@+id/Bet15"
+                        android:background="@drawable/redroulettebutton"
+                        android:layout_weight="1" />
                 </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:layout_weight="1">
 
                     <Button
                         android:text="Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/Bet16" />
+                        android:id="@+id/Bet16"
+                        android:background="@drawable/blackroulettebutton"
+                        android:layout_weight="1" />
 
                     <Button
                         android:text="Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/Bet17" />
+                        android:id="@+id/Bet17"
+                        android:background="@drawable/redroulettebutton"
+                        android:layout_weight="1" />
 
                     <Button
                         android:text="Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/Bet18" />
+                        android:id="@+id/Bet18"
+                        android:background="@drawable/blackroulettebutton"
+                        android:layout_weight="1" />
                 </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:layout_weight="1">
 
                     <Button
                         android:text="Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/BetFirst6" />
+                        android:id="@+id/BetFirst6"
+                        android:background="@drawable/greenroulettecard"
+                        android:layout_weight="1" />
 
                     <Button
                         android:text="Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/BetSecond6" />
+                        android:id="@+id/BetSecond6"
+                        android:background="@drawable/greenroulettecard"
+                        android:layout_weight="1" />
 
                     <Button
                         android:text="Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/BetThird6" />
+                        android:id="@+id/BetThird6"
+                        android:background="@drawable/greenroulettecard"
+                        android:layout_weight="1" />
                 </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:layout_weight="1">
 
                     <Button
                         android:text="Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/Bet0" />
+                        android:id="@+id/Bet0"
+                        android:background="@drawable/greenroulettecard"
+                        android:layout_weight="1" />
 
                     <Button
                         android:text="Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/BetEven" />
+                        android:id="@+id/BetEven"
+                        android:background="@drawable/greenroulettecard"
+                        android:layout_weight="1" />
 
                     <Button
                         android:text="Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/BetOdd" />
+                        android:id="@+id/BetOdd"
+                        android:background="@drawable/greenroulettecard"
+                        android:layout_weight="1" />
                 </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:layout_weight="1">
 
                     <Button
                         android:text="Button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/BetRed" />
+                        android:id="@+id/BetRed"
+                        android:background="@drawable/redroulettebutton"
+                        android:layout_weight="1" />
 
                     <Button
                         android:text="Button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/BetBlack" />
+                        android:id="@+id/BetBlack"
+                        android:background="@drawable/blackroulettebutton"
+                        android:layout_weight="1" />
                 </TableRow>
             </TableLayout>
 
@@ -246,53 +328,62 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:weightSum="1">
+                android:weightSum="10">
 
                 <Button
                     android:text="Quit"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/Quit" />
+                    android:layout_height="0dp"
+                    android:id="@+id/Quit"
+                    android:background="@drawable/bluebutton"
+                    android:layout_weight="1" />
 
                 <RadioGroup
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:checkedButton="@+id/ChipClear">
+                    android:layout_height="0dp"
+                    android:checkedButton="@+id/ChipClear"
+                    android:layout_weight="9"
+                    android:weightSum="5">
 
                     <RadioButton
                         android:layout_width="wrap_content"
+                        android:layout_height="0dp"
                         android:id="@+id/Chip10"
-                        android:background="@drawable/chip10"
-                        android:layout_height="wrap_content"
+                        android:background="@drawable/chip10_selector"
+                        android:button="@null"
                         android:layout_weight="1" />
 
                     <RadioButton
                         android:layout_width="wrap_content"
+                        android:layout_height="0dp"
                         android:id="@+id/Chip25"
-                        android:background="@drawable/chip25"
-                        android:layout_height="wrap_content"
+                        android:background="@drawable/chip25_selector"
+                        android:button="@null"
                         android:layout_weight="1" />
 
                     <RadioButton
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
                         android:id="@+id/Chip50"
                         android:layout_weight="1"
-                        android:background="@drawable/chip50" />
+                        android:background="@drawable/chip50_selector"
+                        android:button="@null" />
 
                     <RadioButton
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
                         android:id="@+id/Chip100"
                         android:layout_weight="1"
-                        android:background="@drawable/chip100" />
+                        android:background="@drawable/chip100_selector"
+                        android:button="@null" />
 
                     <RadioButton
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
                         android:id="@+id/ChipClear"
                         android:layout_weight="1"
-                        android:background="@drawable/eraser" />
+                        android:background="@drawable/eraser_img_selector"
+                        android:button="@null" />
                 </RadioGroup>
 
             </LinearLayout>
@@ -301,8 +392,9 @@
         <Button
             android:text="Spin"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:id="@+id/Spin"
-            android:layout_weight="0.55" />
+            android:layout_weight="1"
+            android:background="@drawable/bluebutton" />
     </LinearLayout>
 </RelativeLayout>

@@ -7,7 +7,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ff016B3A"
+    android:background="@drawable/blueishroulettebackground"
     android:layout_centerVertical="true"
     android:layout_centerHorizontal="true">
 
@@ -18,9 +18,15 @@
         android:id="@+id/RouletteWheelSurfaceView" />
 
     <Button
-        android:text="Ok"
+        android:text="OK"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/RouletteReturnButton" />
+        android:id="@+id/RouletteReturnButton"
+        android:layout_gravity="bottom|center_horizontal"
+        android:background="@drawable/bluebutton"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textAlignment="center"
+        android:textSize="50sp"
+        android:fontFamily="monospace"/>
 
 </FrameLayout>

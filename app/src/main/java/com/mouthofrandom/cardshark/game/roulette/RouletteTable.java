@@ -86,7 +86,7 @@ public class RouletteTable {
 	int reward_tokens = 0;
 	for (RouletteTile t : betTiles) {
 	    if (t.isWinner()) {
-		reward_tokens += t.getBetAmount() * t.getPayoutMultiplier();
+		reward_tokens += t.getBetAmount() * (t.getPayoutMultiplier() + 1);
 	    }
 	}
 	this.clearBoard();

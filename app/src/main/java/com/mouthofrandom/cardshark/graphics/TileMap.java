@@ -6,8 +6,10 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.util.Log;
 
+import com.mouthofrandom.cardshark.fragments.CurrencyBar;
+import com.mouthofrandom.cardshark.graphics.utility.Informer;
+import com.mouthofrandom.cardshark.graphics.utility.Listener;
 import com.mouthofrandom.cardshark.graphics.utility.Observer;
 import com.mouthofrandom.cardshark.graphics.utility.Subject;
 
@@ -24,9 +26,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.mouthofrandom.cardshark.graphics.TileMap.Direction.*;
+import static com.mouthofrandom.cardshark.graphics.TileMap.Direction.DOWN;
+import static com.mouthofrandom.cardshark.graphics.TileMap.Direction.LEFT;
+import static com.mouthofrandom.cardshark.graphics.TileMap.Direction.RIGHT;
+import static com.mouthofrandom.cardshark.graphics.TileMap.Direction.UP;
 
-public class TileMap implements Observer, Subject
+public class TileMap implements Observer, Subject, Informer
 {
     private static final int DIMENSIONS = 416;
     private static final int FRAMES = 32;
@@ -49,16 +54,20 @@ public class TileMap implements Observer, Subject
     private boolean isRunning = false;
     private int frameCount = 0;
     private Collection<Observer> observers;
+    private Collection<Listener> listeners;
 
     public TileMap(Context context, Observer... observers)
     {
         this.observers = new ArrayList<>();
+        this.listeners = new ArrayList<>();
 
         this.observers.addAll(Arrays.asList(observers));
 
+        this.listeners.add(CurrencyBar.CURRENCY_BAR);
+
         AssetManager assetManager = context.getAssets();
 
-        String prefix = "tilex";
+        String prefix = "tilez";
 
         //tiles = new ArrayList<>();
 
@@ -261,7 +270,22 @@ public class TileMap implements Observer, Subject
     }
 
     @Override
-    public void notify(Event event)
+    public void notify(Informer.Event event)
+    {
+        for(Listener listener : listeners)
+        {
+            listener.update(event);
+        }
+    }
+
+    @Override
+    public void addListener(Listener listener)
+    {
+        listeners.add(listener);
+    }
+
+    @Override
+    public void notify(Subject.Event event)
     {
         for(Observer observer : observers)
         {

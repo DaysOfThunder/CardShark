@@ -9,7 +9,7 @@ public interface Subject
 
     void addObserver(Observer observer);
 
-    interface Event {};
+    interface Event {}
 
     enum TouchEvent implements Event
     {

@@ -81,6 +81,11 @@ public class BlackJack {
         this.bet = bet;
     }
 
+    /* Add bet value. */
+    public void addBet(int bet) {
+        this.bet += bet;
+    }
+
     /*
      * Return a reference to the machine's top card. In blackjack,
      * the player can only see the dealer's top card even though the dealer
@@ -89,6 +94,11 @@ public class BlackJack {
     public Card dealerTopCard() {
         return machineHand.topCard();
     }
+
+    public ArrayList<Card> dealerCards() { return machineHand.getCards(); }
+
+    /* Get number of dealer cards. */
+    public int delearNumCards() {return machineHand.getCards().size();}
 
     /* Return a list of the cards in the player's hand. */
     public ArrayList<Card> playerCards() {
@@ -104,6 +114,17 @@ public class BlackJack {
     /* Allow the machine to make one final action and then determine the payout value. */
     public int stand() {
         machineAction();
+        return payout();
+    }
+
+    /* Check for bust. */
+    public boolean bust() {
+        return playerHand.getTotalValue() > BLACKJACK || machineHand.getTotalValue() > BLACKJACK;
+    }
+
+
+    /* We have manually detected a bust. */
+    public int end() {
         return payout();
     }
 }

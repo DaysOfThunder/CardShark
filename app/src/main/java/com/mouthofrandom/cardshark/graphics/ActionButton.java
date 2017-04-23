@@ -3,11 +3,14 @@ package com.mouthofrandom.cardshark.graphics;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.widget.Toast;
 
+import com.mouthofrandom.cardshark.R;
 import com.mouthofrandom.cardshark.activities.RouletteBoardActivity;
 import com.mouthofrandom.cardshark.graphics.utility.Observer;
 import com.mouthofrandom.cardshark.graphics.utility.Subject;
@@ -21,8 +24,9 @@ public class ActionButton implements Observer
     private static final int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
     private static final int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
 
-    private static final int buttonX = (int)(screenWidth - (.1 * screenHeight));
-    private static final int buttonY = (int)(screenHeight - (.1 * screenHeight));
+    private static final double buttonOffset = 0.15;
+    private static final int buttonX = (int)(screenWidth - (buttonOffset * screenHeight));
+    private static final int buttonY = (int)(screenHeight - (buttonOffset * screenHeight));
     private static final int buttonDiameter = screenHeight / 16;
 
     private static final int FRAMES = 30;
@@ -129,12 +133,14 @@ public class ActionButton implements Observer
             Paint p = new Paint();
             p.setColor(Color.RED);
 
-            canvas.drawCircle(buttonX, buttonY, buttonDiameter, p);
+            Bitmap _actionButton = BitmapFactory.decodeResource(context.getResources(), R.drawable.actionbutton);
+            canvas.drawBitmap(_actionButton, buttonX, buttonY, null);
+
         }
     }
 
     public static boolean isInButton(float x, float y)
     {
-        return (x > (buttonX * .9) && y > (buttonY * .9));
+        return (x > (buttonX * ( 1 - buttonOffset)) && y > (buttonY * (1 - buttonOffset)));
     }
 }

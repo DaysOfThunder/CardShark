@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="10"
+    android:background="@drawable/blackjackbackground">
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        tools:context="com.mouthofrandom.cardshark.fragments.CurrencyBar"
+        android:layout_weight="1"
+        android:id="@+id/CurrencyZone">
+
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="com.mouthofrandom.cardshark.fragments.CurrencyBar"
+            android:id="@+id/fragment2" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="7"
+        android:weightSum="10"
+        android:id="@+id/MiddleZone">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="8"
+            android:weightSum="3"
+            android:id="@+id/CardZone">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/DealerZone">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/cardspace"
+                    android:id="@+id/Dealer1"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/cardspace"
+                    android:id="@+id/Dealer2"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/cardspace"
+                    android:id="@+id/Dealer3"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/cardspace"
+                    android:id="@+id/Dealer4"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/BetZoneContainer"
+                android:layout_margin="10dp">
+
+                <Button
+                    android:text="Bet: $0"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/BetZone_BJ"
+                    android:layout_weight="1"
+                    android:background="@drawable/bluebutton"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textAlignment="center"
+                    android:textSize="28sp"
+                    android:fontFamily="monospace"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/PlayerZone">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/cardspace"
+                    android:id="@+id/Player1"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/cardspace"
+                    android:id="@+id/Player2"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/cardspace"
+                    android:id="@+id/Player3"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/cardspace"
+                    android:id="@+id/Player4"
+                    android:layout_weight="1" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:weightSum="10"
+            android:layout_weight="2"
+            android:id="@+id/BetButtonZone">
+
+            <Button
+                android:text="Quit"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:id="@+id/Quit_BJ"
+                android:background="@drawable/bluebutton"
+                android:layout_weight="1" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:checkedButton="@+id/ChipClear_BJ"
+                android:layout_weight="9"
+                android:weightSum="5">
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:id="@+id/Chip10_BJ"
+                    android:background="@drawable/chip10_selector"
+                    android:button="@null"
+                    android:layout_weight="1" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:id="@+id/Chip25_BJ"
+                    android:background="@drawable/chip25_selector"
+                    android:button="@null"
+                    android:layout_weight="1" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:id="@+id/Chip50_BJ"
+                    android:layout_weight="1"
+                    android:background="@drawable/chip50_selector"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:id="@+id/Chip100_BJ"
+                    android:layout_weight="1"
+                    android:background="@drawable/chip100_selector"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:id="@+id/ChipClear_BJ"
+                    android:layout_weight="1"
+                    android:background="@drawable/eraser_img_selector"
+                    android:button="@null" />
+            </RadioGroup>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:weightSum="3"
+            android:layout_margin="15dp"
+        android:id="@+id/ActButtonZone">
+
+            <Button
+                android:text="Deal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/Deal"
+                android:layout_weight="1"
+                android:background="@drawable/blackjackbuttondeal"
+                android:layout_margin="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textAlignment="center"
+                android:textSize="28sp"
+                android:fontFamily="monospace"/>
+
+            <Button
+                android:text="Hit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/Hit"
+                android:layout_weight="1"
+                android:background="@drawable/blackjackbuttondouble"
+                android:layout_margin="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textAlignment="center"
+                android:textSize="28sp"
+                android:fontFamily="monospace"/>
+
+            <Button
+                android:text="Stand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/Stand"
+                android:layout_weight="1"
+                android:background="@drawable/blackjackbuttonstand"
+                android:layout_margin="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textAlignment="center"
+                android:textSize="28sp"
+                android:fontFamily="monospace"/>
+        </LinearLayout>
+</LinearLayout>

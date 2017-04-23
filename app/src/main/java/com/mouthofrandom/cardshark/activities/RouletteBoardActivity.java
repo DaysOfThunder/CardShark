@@ -182,7 +182,7 @@ public class RouletteBoardActivity extends AppCompatActivity implements Informer
         Button chip100 = (Button) findViewById(R.id.Chip100);
         chip100.setOnClickListener(new BetAmountClickListener(100));
 
-        Button chipClear = (Button) findViewById(R.id.ChipClear);
+        Button chipClear = (Button) findViewById(R.id.ChipClear_BJ);
         chipClear.setOnClickListener(new BetAmountClickListener(0));
     }
 

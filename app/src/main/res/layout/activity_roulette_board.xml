@@ -341,7 +341,7 @@
                 <RadioGroup
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:checkedButton="@+id/ChipClear"
+                    android:checkedButton="@+id/ChipClear_BJ"
                     android:layout_weight="9"
                     android:weightSum="5">
 
@@ -380,7 +380,7 @@
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
-                        android:id="@+id/ChipClear"
+                        android:id="@+id/ChipClear_BJ"
                         android:layout_weight="1"
                         android:background="@drawable/eraser_img_selector"
                         android:button="@null" />
